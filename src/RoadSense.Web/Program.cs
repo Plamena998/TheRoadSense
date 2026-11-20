@@ -5,7 +5,9 @@ using RoadSense.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using RoadSense.Infrastructure.Mock;
 using RoadSense.Infrastructure.Sql;
+using RoadSense.Application.RiskPrediction;
 using RoadSense.Web.Infrastructure;
+using RoadSense.Web.Infrastructure.MachineLearning;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +71,13 @@ builder.Services.AddSingleton<LocationService>();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient("openmeteo", c => { c.Timeout = TimeSpan.FromSeconds(10); c.DefaultRequestHeaders.UserAgent.ParseAdd("RoadSense/1.0"); });
 builder.Services.AddSingleton<OpenMeteoForecast>();
+
+// ---- ML.NET модел за оценка на риска по времето ----
+// Обучава се от dataSource (месечни ПТП по области + почасово време) при първо ползване, ако файлът на модела липсва.
+builder.Services.AddSingleton(new RiskModelOptions(
+    Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, builder.Configuration["RiskModel:DataSourcePath"] ?? "../../dataSource")),
+    builder.Configuration["RiskModel:ModelPath"] is { Length: > 0 } modelPath ? modelPath : null));
+builder.Services.AddSingleton<IRiskPredictor, MlNetRiskPredictor>();
 
 // ---- Живи метеоданни от bgtoll.bg (JSON, обновява се на 15 минути) ----
 builder.Services.AddHttpClient("bgtoll", c => c.Timeout = TimeSpan.FromSeconds(20));

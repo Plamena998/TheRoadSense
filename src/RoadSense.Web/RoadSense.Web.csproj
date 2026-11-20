@@ -7,6 +7,10 @@
     <ProjectReference Include="..\RoadSense.Infrastructure.Sql\RoadSense.Infrastructure.Sql.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="6.0.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>

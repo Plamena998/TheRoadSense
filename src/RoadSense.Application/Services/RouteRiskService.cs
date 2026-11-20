@@ -1,3 +1,4 @@
+using RoadSense.Application.Hazard;
 using RoadSense.Domain;
 
 namespace RoadSense.Application.Services;
@@ -6,8 +7,10 @@ namespace RoadSense.Application.Services;
 /// Намира най-бързия маршрут по пътната мрежа (Дейкстра по време) и оценява риска 0–100
 /// за всеки участък в часа, в който шофьорът ще мине през него.
 /// Тежести: време и видимост 45%, история на ПТП 25%, инциденти и ремонти 20%, трафик 10%.
+/// „Време и видимост“ е по-голямото от: оценката по видимостта (мъгла според излагането на участъка)
+/// и индекса на метеорологична опасност (<see cref="HazardIndexCalculator"/>: дъжд, сняг, поледица, вятър, нощ).
 /// </summary>
-public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherProvider weather)
+public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherProvider weather, TimeProvider clock)
 {
     private static readonly IReadOnlyDictionary<VehicleType, int> VehicleBonus = new Dictionary<VehicleType, int>
     {
@@ -24,10 +27,14 @@ public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherPro
         departureHour = Math.Clamp(departureHour, 0, 23);
 
         var path = fromId == toId ? [] : ShortestPath(fromId, toId);
-        var eval = EvaluatePath(path, departureHour, vehicle);
+
+        // Времето за днес и утре (пътуване след полунощ) се взима веднъж за цялата оценка.
+        var today = DateOnly.FromDateTime(clock.GetLocalNow().DateTime);
+        var days = new[] { weather.GetDay(today), weather.GetDay(today.AddDays(1)) };
+        var eval = EvaluatePath(path, departureHour, vehicle, days);
 
         var departures = Enumerable.Range(0, 24)
-            .Select(h => { var s = EvaluatePath(path, h, vehicle).Score; return new DepartureOption(h, s, Risk.LevelOf(s)); })
+            .Select(h => { var s = EvaluatePath(path, h, vehicle, days).Score; return new DepartureOption(h, s, Risk.LevelOf(s)); })
             .ToList();
         var best = departures.OrderBy(d => d.Score).ThenBy(d => Math.Abs(d.Hour - departureHour)).First();
 
@@ -35,22 +42,27 @@ public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherPro
         {
             var notes = new List<string>
             {
-                l.Risk.Weather >= 74 ? $"мъгла, видимост ~{l.Risk.Visibility} м" : l.Risk.Weather >= 50 ? "намалена видимост" : "добра видимост"
+                l.Risk.FogScore >= 74 ? $"мъгла, видимост ~{l.Risk.Visibility} м" : l.Risk.FogScore >= 50 ? "намалена видимост" : "добра видимост"
             };
+            notes.AddRange(l.Risk.Conditions.Where(c => c is not (WeatherCondition.Fog or WeatherCondition.DenseFog)).Select(c => c.Bg()));
             if (l.Segment.Incident is { } inc) notes.Add(inc);
             if (l.Segment.Repair is { } rep) notes.Add(rep);
             if (l.Segment.History >= 0.8) notes.Add("черна точка");
             return new RouteLeg(l.Segment.Id, l.Segment.Road, cities[l.From].Name, cities[l.To].Name, l.Segment.Km,
                 l.Start, l.Start >= 24, l.Risk.Total, Risk.LevelOf(l.Risk.Total), l.Risk.Visibility,
-                string.Join(" · ", notes), l.Segment.Incident, l.Segment.Repair);
+                string.Join(" · ", notes), l.Segment.Incident, l.Segment.Repair,
+                l.Risk.Conditions.Select(c => c.ToString()).ToList(), l.Risk.HazardScore);
         }).ToList();
 
         var verdict = "Избери две различни точки.";
         if (eval.Worst is { } w)
         {
             var mid = w.Start + w.Segment.Km / w.Segment.AvgSpeedKmh / 2;
-            var cause = w.Risk.Weather >= 74 ? $"гъста мъгла (видимост около {w.Risk.Visibility} м)"
-                : w.Risk.Weather >= 50 ? "намалена видимост"
+            var otherConditions = w.Risk.Conditions.Where(c => c is not (WeatherCondition.Fog or WeatherCondition.DenseFog)).ToList();
+            var cause = w.Risk.HazardScore > w.Risk.FogScore && otherConditions.Count > 0 ? string.Join(" и ", otherConditions.Select(c => c.Bg()))
+                : w.Risk.FogScore >= 74 ? $"гъста мъгла (видимост около {w.Risk.Visibility} м)"
+                : w.Risk.FogScore >= 50 ? "намалена видимост"
+                : otherConditions.Count > 0 ? string.Join(" и ", otherConditions.Select(c => c.Bg()))
                 : w.Segment.Incident is not null ? "инцидент на пътя"
                 : w.Segment.Repair is not null ? "ремонт" : "историята на катастрофите в участъка";
             verdict = $"Най-рисково е при {cities[w.From].Name} – {cities[w.To].Name} около {Clock(mid)}{(mid >= 24 ? " (утре)" : "")}: {cause}.";
@@ -82,7 +94,8 @@ public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherPro
     // ---------- вътрешни ----------
 
     private sealed record Step(RoadSegment Segment, string From, string To);
-    private sealed record SegmentRisk(int Total, double Weather, double History, double Incidents, double Traffic, int Visibility);
+    private sealed record SegmentRisk(int Total, double Weather, double History, double Incidents, double Traffic, int Visibility,
+        double FogScore, int HazardScore, IReadOnlyList<WeatherCondition> Conditions);
     private sealed record LegEval(RoadSegment Segment, string From, string To, double Start, SegmentRisk Risk);
     private sealed record Factors(double Weather, double History, double Incidents, double Traffic);
     private sealed record PathEval(List<LegEval> Legs, int Score, LegEval? Worst, double Km, double Hours, Factors Factors);
@@ -112,7 +125,7 @@ public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherPro
         return path;
     }
 
-    private PathEval EvaluatePath(List<Step> path, int departure, VehicleType vehicle)
+    private PathEval EvaluatePath(List<Step> path, int departure, VehicleType vehicle, IReadOnlyList<WeatherHour>[] days)
     {
         double t = departure, wsum = 0, km = 0, fw = 0, fh = 0, fi = 0, ft = 0;
         var legs = new List<LegEval>();
@@ -120,7 +133,7 @@ public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherPro
         foreach (var step in path)
         {
             var dur = step.Segment.Km / step.Segment.AvgSpeedKmh;
-            var r = SegmentRiskAt(step.Segment, t + dur / 2, vehicle);
+            var r = SegmentRiskAt(step.Segment, t + dur / 2, vehicle, days);
             var leg = new LegEval(step.Segment, step.From, step.To, t, r);
             legs.Add(leg);
             t += dur;
@@ -134,16 +147,24 @@ public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherPro
         return new PathEval(legs, score, worst, km, t - departure, f);
     }
 
-    private SegmentRisk SegmentRiskAt(RoadSegment e, double hour, VehicleType vehicle)
+    private SegmentRisk SegmentRiskAt(RoadSegment e, double hour, VehicleType vehicle, IReadOnlyList<WeatherHour>[] days)
     {
         var hh = (((int)Math.Floor(hour)) % 24 + 24) % 24;
         var fog = weather.GetFogIndex(hh);
         var vis = (int)Math.Max(35, Math.Round(10000 * Math.Exp(-5.4 * e.FogExposure * fog)));
-        double w = vis < 50 ? 96 : vis < 100 ? 88 : vis < 200 ? 74 : vis < 500 ? 50 : vis < 1000 ? 30 : 10;
+        double fogScore = vis < 50 ? 96 : vis < 100 ? 88 : vis < 200 ? 74 : vis < 500 ? 50 : vis < 1000 ? 30 : 10;
+
+        // Индекс на опасност за часа: условията от прогнозата, с видимостта на този участък.
+        var dayHours = days[Math.Clamp((int)Math.Floor(hour / 24), 0, days.Length - 1)];
+        var weatherHour = dayHours.FirstOrDefault(x => x.Hour == hh);
+        var hazard = weatherHour is null ? null : HazardIndexCalculator.Calculate(weatherHour.ToObservation(vis));
+        var hazardScore = hazard?.Score ?? 0;
+        double w = Math.Max(fogScore, hazardScore);
         var hist = e.History * 100;
         double inc = e.Incident is not null ? 70 : e.Repair is not null ? 45 : 5;
         double traffic = (hh is >= 7 and <= 9) || (hh is >= 17 and <= 19) ? 55 : 20;
         var total = (int)Math.Min(100, Math.Round(0.45 * (w + VehicleBonus[vehicle]) + 0.25 * hist + 0.2 * inc + 0.1 * traffic));
-        return new SegmentRisk(total, w, hist, inc, traffic, vis);
+        return new SegmentRisk(total, w, hist, inc, traffic, vis, fogScore, hazardScore,
+            hazard?.Factors.Select(f => f.Condition).ToList() ?? []);
     }
 }

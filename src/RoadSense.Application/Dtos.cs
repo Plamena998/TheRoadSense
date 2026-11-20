@@ -25,7 +25,8 @@ public sealed record RouteFactor(string Key, string Label, int Value);
 public sealed record RouteLeg(
     string SegmentId, string Road, string From, string To, double Km,
     double StartHour, bool NextDay, int Score, RiskLevel Level, int VisibilityM,
-    string Note, string? Incident, string? Repair);
+    string Note, string? Incident, string? Repair,
+    IReadOnlyList<string> Conditions, int HazardScore);
 
 public sealed record DepartureOption(int Hour, int Score, RiskLevel Level);
 

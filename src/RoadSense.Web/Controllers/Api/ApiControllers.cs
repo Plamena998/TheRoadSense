@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RoadSense.Application;
+using RoadSense.Application.Hazard;
+using RoadSense.Application.RiskPrediction;
 using RoadSense.Application.Services;
 using RoadSense.Domain;
 using RoadSense.Web.Infrastructure;
@@ -95,6 +97,63 @@ public class WeatherApiController(WeatherService weather, IWeatherProvider provi
         if (s is null && isNow && live?.Station is { SurfaceC: <= 0.5, HumidityPct: >= 90 } && live.DistanceKm <= 50) s = SurfaceType.Ice;
         return advisor.Recommend(w, vehicle, road, s);
     }
+}
+
+[ApiController]
+[Route("api/risk")]
+public class RiskApiController(IRiskPredictor predictor) : ControllerBase
+{
+    /// <summary>
+    /// Оценка на риска по времето за деня в точката (Open-Meteo, 24 часа).
+    /// ML моделът (ML.NET) дава относителен риск спрямо обичайното; ако при обучението не е по-добър
+    /// от базовата линия, основната оценка идва от индекса на опасност (правилата), а ML стойността е само за сравнение.
+    /// Пример: /api/risk?lat=42.69&amp;lon=23.32
+    /// </summary>
+    [HttpGet]
+    public async Task<IActionResult> Get([FromServices] OpenMeteoForecast forecast, double lat, double lon, CancellationToken ct)
+    {
+        if (lat is < -90 or > 90 || lon is < -180 or > 180) return Problem("Невалидни координати.", statusCode: 400);
+        var f = await forecast.GetAsync(lat, lon, ct);
+        if (f is null || f.Hours.Count == 0) return Problem("Няма метеоданни за района.", statusCode: 404);
+
+        var features = WeatherRiskFeatures.FromHours(f.Hours.Select(h => h.ToObservation()).ToList());
+        var ml = predictor.Predict(features);
+        var info = predictor.ModelInfo;
+
+        var hourly = f.Hours.Select(h => (h.Hour, Hazard: HazardIndexCalculator.Calculate(h.ToObservation()))).ToList();
+        var worst = hourly.MaxBy(x => x.Hazard.Score);
+        var score = info.IsReliable ? ml.Score : worst.Hazard.Score;
+        var level = Risk.LevelOf(score);
+
+        return Ok(new
+        {
+            score,
+            level,
+            levelLabel = Risk.Label(level),
+            source = info.IsReliable ? "ml" : "rules",
+            worstHour = new
+            {
+                hour = worst.Hour,
+                score = worst.Hazard.Score,
+                conditions = worst.Hazard.Factors.Select(x => x.Condition.ToString()),
+                text = string.Join(", ", worst.Hazard.Factors.Select(x => x.Condition.Bg()))
+            },
+            hours = hourly.Select(x => new { hour = x.Hour, score = x.Hazard.Score, level = x.Hazard.Level }),
+            ml = new
+            {
+                relativeRisk = ml.RelativeRisk,
+                changePercent = Math.Round((ml.RelativeRisk - 1) * 100, 1),
+                score = ml.Score,
+                reliable = info.IsReliable
+            },
+            features,
+            model = info
+        });
+    }
+
+    /// <summary>Метрики на ML модела от обучението (кръстосана проверка).</summary>
+    [HttpGet("model")]
+    public RiskModelInfo Model() => predictor.ModelInfo;
 }
 
 [ApiController]
