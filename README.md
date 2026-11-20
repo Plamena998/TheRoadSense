@@ -32,7 +32,6 @@ src/
     SqlDataStore.cs                 реализира всички интерфейси за данни върху базата
     DatabaseInitializer.cs          миграции + зареждане на празните таблици от CSV (по един метод на таблица)
     CsvData.cs                      четене и износ на CSV през EF метаданните
-  RoadSense.DbTool/                 миграции и зареждане от командния ред; „export“ записва таблиците в CSV
   RoadSense.Web/
     Program.cs                      DI: SqlDataStore, миграции и зареждане при старт
     Controllers/PagesControllers.cs MVC страниците
@@ -62,12 +61,11 @@ src/
 
 Началните данни са CSV файлове в `dataSource/seed` — по един на таблица, с име като таблицата (`Cities.csv`, `RoadSegments.csv`, …). Първият ред е заглавие с имената на колоните, празна стойност е NULL.
 
-При стартиране на `RoadSense.Web` (или `dotnet run --project src/RoadSense.DbTool`):
+При стартиране на `RoadSense.Web`:
 1. ако има неприложени EF миграции, се прилагат (базата се създава, ако липсва);
 2. всяка таблица, която е празна, се зарежда от своя CSV файл. Таблици с данни не се пипат.
 
 Файловете се копират в `SeedData/` до изпълнимия файл при build. Друга папка се задава с `Database:SeedPath`.
-Текущото съдържание на базата се записва обратно в CSV с `dotnet run --project src/RoadSense.DbTool -- export`.
 
 ## Местоположение
 

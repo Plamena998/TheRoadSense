@@ -11,7 +11,7 @@ namespace RoadSense.Infrastructure.Sql;
 /// <summary>
 /// CSV данни за всички таблици в базата: по един файл на ентитет, наречен като таблицата (напр. Cities.csv).
 /// Първият ред е заглавие с имената на свойствата на ентитета; празна стойност означава NULL.
-/// Работи през EF метаданните, затова нова таблица влиза автоматично, щом има файл с нейното име.
+/// Работи през EF метаданните.
 /// </summary>
 public static class CsvData
 {
@@ -53,30 +53,6 @@ public static class CsvData
         var asNoTracking = typeof(EntityFrameworkQueryableExtensions).GetMethod(nameof(EntityFrameworkQueryableExtensions.AsNoTracking))!
             .MakeGenericMethod(t.ClrType).Invoke(null, [set])!;
         return ((IEnumerable)asNoTracking).Cast<object>();
-    }
-
-    // ---------- износ (база → CSV) ----------
-
-    /// <summary>Записва всяка таблица в свой CSV файл в папката. Връща броя редове по таблици.</summary>
-    public static Dictionary<string, int> Export(RoadSenseDbContext db, string dir)
-    {
-        Directory.CreateDirectory(dir);
-        var counts = new Dictionary<string, int>();
-        foreach (var t in OrderedEntityTypes(db))
-        {
-            var cols = Columns(t);
-            var key = t.FindPrimaryKey()!.Properties;
-            var rows = SetOf(db, t).ToList();
-            rows = rows.OrderBy(r => KeyOf(r, key), new NaturalComparer()).ToList();
-
-            var sb = new StringBuilder();
-            sb.AppendLine(string.Join(",", cols.Select(c => Quote(c.Name))));
-            foreach (var r in rows)
-                sb.AppendLine(string.Join(",", cols.Select(c => Quote(Format(c.PropertyInfo!.GetValue(r))))));
-            File.WriteAllText(Path.Combine(dir, FileName(t)), sb.ToString(), new UTF8Encoding(false));
-            counts[t.GetTableName()!] = rows.Count;
-        }
-        return counts;
     }
 
     // ---------- внос (CSV → база) ----------
@@ -214,22 +190,5 @@ public static class CsvData
         }
         if (any || sb.Length > 0) { row.Add(sb.ToString()); rows.Add(row); }
         return rows;
-    }
-
-    /// <summary>Подрежда ключове като „2“ преди „10“, а текстовете по азбучен ред.</summary>
-    private sealed class NaturalComparer : IComparer<string>
-    {
-        public int Compare(string? x, string? y)
-        {
-            var a = (x ?? "").Split('|'); var b = (y ?? "").Split('|');
-            for (var i = 0; i < Math.Min(a.Length, b.Length); i++)
-            {
-                var c = double.TryParse(a[i], NumberStyles.Float, Inv, out var da) && double.TryParse(b[i], NumberStyles.Float, Inv, out var db)
-                    ? da.CompareTo(db)
-                    : string.CompareOrdinal(a[i], b[i]);
-                if (c != 0) return c;
-            }
-            return a.Length.CompareTo(b.Length);
-        }
     }
 }

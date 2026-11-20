@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadSense.Web", "src\RoadSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadSense.Infrastructure.Sql", "src\RoadSense.Infrastructure.Sql\RoadSense.Infrastructure.Sql.csproj", "{E40DCA9F-1C7E-49FC-A70B-8B779CB433B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadSense.DbTool", "src\RoadSense.DbTool\RoadSense.DbTool.csproj", "{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,18 +71,6 @@ Global
 		{E40DCA9F-1C7E-49FC-A70B-8B779CB433B8}.Release|x64.Build.0 = Release|Any CPU
 		{E40DCA9F-1C7E-49FC-A70B-8B779CB433B8}.Release|x86.ActiveCfg = Release|Any CPU
 		{E40DCA9F-1C7E-49FC-A70B-8B779CB433B8}.Release|x86.Build.0 = Release|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Debug|x64.Build.0 = Debug|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Debug|x86.Build.0 = Debug|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Release|x64.ActiveCfg = Release|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Release|x64.Build.0 = Release|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Release|x86.ActiveCfg = Release|Any CPU
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +80,5 @@ Global
 		{0BD5369A-7843-4A0E-96DA-406BBE3F6AF2} = {3F720586-D83A-4A85-AB3B-D0ACAD0A06AD}
 		{134DD0CD-A3C3-408A-B9CF-DB95B50FD1B8} = {3F720586-D83A-4A85-AB3B-D0ACAD0A06AD}
 		{E40DCA9F-1C7E-49FC-A70B-8B779CB433B8} = {3F720586-D83A-4A85-AB3B-D0ACAD0A06AD}
-		{404BCF09-AC2F-41A5-AD8F-7FC94C3990A5} = {3F720586-D83A-4A85-AB3B-D0ACAD0A06AD}
 	EndGlobalSection
 EndGlobal
