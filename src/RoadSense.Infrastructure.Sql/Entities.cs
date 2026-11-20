@@ -216,3 +216,12 @@ public class FirstAidKitItemEntity
     public int SortOrder { get; set; }
     public string Text { get; set; } = "";
 }
+
+// ===== Абонати =====
+public class SubscriberEntity
+{
+    public int Id { get; set; }
+    /// <summary>Нормализиран (малки букви), уникален.</summary>
+    public string Email { get; set; } = "";
+    public DateTime SubscribedUtc { get; set; }
+}

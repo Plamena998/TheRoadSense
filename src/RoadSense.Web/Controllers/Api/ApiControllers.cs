@@ -181,3 +181,27 @@ public class ContentApiController(IContentRepository content) : ControllerBase
     [HttpGet("ticker")]
     public IReadOnlyList<TickerItem> Ticker() => content.GetTicker();
 }
+
+public sealed record SubscribeRequest(string? Email);
+
+[ApiController]
+[Route("api/subscribe")]
+public class SubscribeApiController(ISubscriberRepository subscribers) : ControllerBase
+{
+    /// <summary>Абонира имейл за предупреждения. 200 — записан (или вече абониран), 400 — невалиден имейл.</summary>
+    [HttpPost]
+    public async Task<IActionResult> Post([FromBody] SubscribeRequest request, CancellationToken ct)
+    {
+        var email = request.Email?.Trim();
+        if (!IsValid(email)) return Problem("Въведи валиден имейл.", statusCode: 400);
+        var added = await subscribers.AddAsync(email!, ct);
+        return Ok(new { status = added ? "subscribed" : "exists" });
+    }
+
+    private static bool IsValid(string? email)
+    {
+        if (string.IsNullOrEmpty(email) || email.Length > 254) return false;
+        if (!System.Net.Mail.MailAddress.TryCreate(email, out var parsed) || parsed.Address != email) return false;
+        return parsed.Host.Contains('.');
+    }
+}

@@ -17,7 +17,7 @@ namespace RoadSense.Infrastructure.Sql.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.0")
+                .HasAnnotation("ProductVersion", "10.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -733,6 +733,30 @@ namespace RoadSense.Infrastructure.Sql.Migrations
                     b.HasKey("Condition");
 
                     b.ToTable("SpeedReductionRules");
+                });
+
+            modelBuilder.Entity("RoadSense.Infrastructure.Sql.SubscriberEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(254)
+                        .HasColumnType("nvarchar(254)");
+
+                    b.Property<DateTime>("SubscribedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Subscribers");
                 });
 
             modelBuilder.Entity("RoadSense.Infrastructure.Sql.TickerItemEntity", b =>

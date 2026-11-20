@@ -10,7 +10,7 @@ namespace RoadSense.Infrastructure.Sql;
 /// така че сингълтон услугите не удрят базата при всяка заявка.
 /// </summary>
 public sealed class SqlDataStore(IDbContextFactory<RoadSenseDbContext> factory) : IRoadNetworkRepository, ISpeedLimitRepository, IWeatherProvider,
-    IStatsRepository, IContentRepository, IPlaceRepository
+    IStatsRepository, IContentRepository, IPlaceRepository, ISubscriberRepository
 {
     private static readonly TimeSpan Ttl = TimeSpan.FromMinutes(5);
     private readonly Dictionary<string, (DateTime at, object value)> _cache = new();
@@ -120,4 +120,15 @@ public sealed class SqlDataStore(IDbContextFactory<RoadSenseDbContext> factory) 
             db.FirstAidTopics.Include(t => t.Items).AsSplitQuery().OrderBy(t => t.SortOrder).AsEnumerable()
                 .Select(t => new FirstAidTopic(t.Id, t.Tag, t.Title, t.Items.OrderBy(i => i.SortOrder).Select(i => i.Text).ToList())).ToList(),
             db.FirstAidKitItems.OrderBy(k => k.SortOrder).Select(k => k.Text).ToList()));
+
+    // ---- абонати ----
+    public async Task<bool> AddAsync(string email, CancellationToken ct = default)
+    {
+        email = email.Trim().ToLowerInvariant();
+        await using var db = await factory.CreateDbContextAsync(ct);
+        if (await db.Subscribers.AnyAsync(x => x.Email == email, ct)) return false;
+        db.Subscribers.Add(new SubscriberEntity { Email = email, SubscribedUtc = DateTime.UtcNow });
+        try { await db.SaveChangesAsync(ct); return true; }
+        catch (DbUpdateException) { return false; } // едновременна заявка с същия имейл — уникалният индекс я отхвърля
+    }
 }

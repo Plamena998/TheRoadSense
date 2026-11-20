@@ -163,7 +163,26 @@ html.lenis, html.lenis body { height: auto; }
 .subscribe h2 { flex: 1 1 480px; font-size: 36px; line-height: 1.1; letter-spacing: -0.02em; }
 .subscribe__form { flex: 1 1 420px; display: flex; gap: 8px; padding: 6px; border-radius: 999px; border: 1.5px solid #39453C; background: var(--surface); }
 .subscribe__form input { flex: 1 1 auto; min-width: 0; height: 48px; padding: 0 18px; border: 0; background: transparent; color: #fff; font-size: 16px; outline: none; }
+.subscribe__form input { color-scheme: dark; caret-color: #fff; }
+/* автоматично попълване / подсказки на браузъра: без бял фон, остава тъмно */
+.subscribe__form input:-webkit-autofill,
+.subscribe__form input:-webkit-autofill:hover,
+.subscribe__form input:-webkit-autofill:focus,
+.subscribe__form input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
+  box-shadow: 0 0 0 1000px var(--surface) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+.subscribe__form input:autofill {
+  -webkit-text-fill-color: #fff;
+  box-shadow: 0 0 0 1000px var(--surface) inset;
+}
 .subscribe__form .btn { height: 48px; }
+.subscribe__msg { flex: 1 1 100%; margin: 0; min-height: 1.4em; text-align: right; color: var(--muted, #8A998F); }
+.subscribe__msg.is-ok { color: #D4F2DB; }
+.subscribe__msg.is-error { color: #FF6B60; }
 
 /* статичен режим (без JS или при намалено движение): показваме едно число, без скрол история */
 .story.is-static { height: auto; }

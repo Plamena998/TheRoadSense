@@ -69,3 +69,10 @@ public sealed record HomeContent(IReadOnlyList<HomeStat> Stats, string StatsSour
 public sealed record FirstAidStep(string Title, string Lead, IReadOnlyList<string> Items);
 public sealed record FirstAidTopic(string Id, string Tag, string Title, IReadOnlyList<string> Items);
 public sealed record FirstAidContent(IReadOnlyList<FirstAidStep> Steps, IReadOnlyList<FirstAidTopic> Topics, IReadOnlyList<string> Kit);
+
+/// <summary>Абонати за предупреждения по имейл.</summary>
+public interface ISubscriberRepository
+{
+    /// <summary>Записва имейла. Връща false, ако вече е абониран (регистърът на буквите не се отчита).</summary>
+    Task<bool> AddAsync(string email, CancellationToken ct = default);
+}

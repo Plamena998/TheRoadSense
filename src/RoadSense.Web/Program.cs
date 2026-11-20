@@ -30,6 +30,7 @@ builder.Services.AddSingleton<IWeatherProvider>(sp => sp.GetRequiredService<SqlD
 builder.Services.AddSingleton<IStatsRepository>(sp => sp.GetRequiredService<SqlDataStore>());
 builder.Services.AddSingleton<IContentRepository>(sp => sp.GetRequiredService<SqlDataStore>());
 builder.Services.AddSingleton<IPlaceRepository>(sp => sp.GetRequiredService<SqlDataStore>());
+builder.Services.AddSingleton<ISubscriberRepository>(sp => sp.GetRequiredService<SqlDataStore>());
 
 // ---- Местоположение по мрежата (Wi-Fi / мобилни данни), когато няма GPS: услугата ipwho.is ----
 builder.Services.AddHttpClient<IIpGeolocator, IpWhoIsGeolocator>(c => c.Timeout = TimeSpan.FromSeconds(4));

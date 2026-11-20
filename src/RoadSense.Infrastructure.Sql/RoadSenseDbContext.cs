@@ -26,6 +26,7 @@ public class RoadSenseDbContext(DbContextOptions<RoadSenseDbContext> options) : 
     public DbSet<FirstAidTopicEntity> FirstAidTopics => Set<FirstAidTopicEntity>();
     public DbSet<FirstAidTopicItemEntity> FirstAidTopicItems => Set<FirstAidTopicItemEntity>();
     public DbSet<FirstAidKitItemEntity> FirstAidKitItems => Set<FirstAidKitItemEntity>();
+    public DbSet<SubscriberEntity> Subscribers => Set<SubscriberEntity>();
 
     public DbSet<OblastEntity> Oblasts => Set<OblastEntity>();
     public DbSet<OblastPeriodStatEntity> OblastPeriodStats => Set<OblastPeriodStatEntity>();
@@ -212,5 +213,11 @@ public class RoadSenseDbContext(DbContextOptions<RoadSenseDbContext> options) : 
             e.HasMany(x => x.Items).WithOne().HasForeignKey(x => x.TopicId).OnDelete(DeleteBehavior.Cascade);
         });
         b.Entity<FirstAidTopicItemEntity>().Property(x => x.TopicId).HasMaxLength(50);
+
+        b.Entity<SubscriberEntity>(e =>
+        {
+            e.Property(x => x.Email).HasMaxLength(254);
+            e.HasIndex(x => x.Email).IsUnique();
+        });
     }
 }
