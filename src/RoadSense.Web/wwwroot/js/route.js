@@ -85,6 +85,9 @@
     badge.className = 'lvl lvl--' + r.level; badge.textContent = r.levelLabel + ' риск';
     $('marker').style.transform = 'translateX(' + Math.min(99, r.score) + '%)';
     $('verdict').textContent = r.verdict;
+    $('mlNote').textContent = r.riskSource === 'ml'
+      ? 'Времето в оценката е изчислено от ML модел (ML.NET)' + (r.modelReliable ? '.' : ' — моделът все още не е по-добър от базовата линия, затова разликите между часовете са малки.')
+      : '';
     $('factors').innerHTML = r.factors.map((f) =>
       '<div class="factor"><span>' + RS.esc(f.label) + '</span><span class="track"><span class="bar-h" style="transform:scaleX(' + (f.value / 100).toFixed(3) + ');background:' + RS.level[RS.levelOf(f.value)].color + '"></span></span><span class="mono" style="text-align:right;color:var(--text)">' + f.value + '</span></div>').join('');
 

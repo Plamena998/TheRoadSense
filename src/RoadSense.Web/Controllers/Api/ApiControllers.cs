@@ -105,8 +105,8 @@ public class RiskApiController(IRiskPredictor predictor) : ControllerBase
 {
     /// <summary>
     /// Оценка на риска по времето за деня в точката (Open-Meteo, 24 часа).
-    /// ML моделът (ML.NET) дава относителен риск спрямо обичайното; ако при обучението не е по-добър
-    /// от базовата линия, основната оценка идва от индекса на опасност (правилата), а ML стойността е само за сравнение.
+    /// Основната оценка е на ML модела (ML.NET): относителен риск спрямо обичайното, преобразуван в 0–100.
+    /// Полето ml.reliable показва дали моделът е по-добър от базовата линия при обучението.
     /// Пример: /api/risk?lat=42.69&amp;lon=23.32
     /// </summary>
     [HttpGet]
@@ -122,7 +122,7 @@ public class RiskApiController(IRiskPredictor predictor) : ControllerBase
 
         var hourly = f.Hours.Select(h => (h.Hour, Hazard: HazardIndexCalculator.Calculate(h.ToObservation()))).ToList();
         var worst = hourly.MaxBy(x => x.Hazard.Score);
-        var score = info.IsReliable ? ml.Score : worst.Hazard.Score;
+        var score = ml.Score;
         var level = Risk.LevelOf(score);
 
         return Ok(new
@@ -130,7 +130,7 @@ public class RiskApiController(IRiskPredictor predictor) : ControllerBase
             score,
             level,
             levelLabel = Risk.Label(level),
-            source = info.IsReliable ? "ml" : "rules",
+            source = "ml",
             worstHour = new
             {
                 hour = worst.Hour,

@@ -36,7 +36,7 @@ public sealed record RouteResult(
     int Score, RiskLevel Level, string LevelLabel, string Verdict,
     IReadOnlyList<RouteFactor> Factors, IReadOnlyList<RouteLeg> Legs,
     IReadOnlyList<DepartureOption> Departures, int BestHour, int BestScore,
-    IReadOnlyList<string> SegmentIds);
+    IReadOnlyList<string> SegmentIds, string RiskSource, bool ModelReliable);
 
 public sealed record RoadNetworkDto(IReadOnlyList<City> Cities, IReadOnlyList<RoadSegment> Segments);
 

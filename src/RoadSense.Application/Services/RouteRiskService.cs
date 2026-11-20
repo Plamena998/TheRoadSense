@@ -1,4 +1,5 @@
 using RoadSense.Application.Hazard;
+using RoadSense.Application.RiskPrediction;
 using RoadSense.Domain;
 
 namespace RoadSense.Application.Services;
@@ -7,15 +8,21 @@ namespace RoadSense.Application.Services;
 /// Намира най-бързия маршрут по пътната мрежа (Дейкстра по време) и оценява риска 0–100
 /// за всеки участък в часа, в който шофьорът ще мине през него.
 /// Тежести: време и видимост 45%, история на ПТП 25%, инциденти и ремонти 20%, трафик 10%.
-/// „Време и видимост“ е по-голямото от: оценката по видимостта (мъгла според излагането на участъка)
-/// и индекса на метеорологична опасност (<see cref="HazardIndexCalculator"/>: дъжд, сняг, поледица, вятър, нощ).
+/// „Време и видимост“ е оценката на ML модела (<see cref="IRiskPredictor"/>) за времето около часа на преминаване
+/// (прозорец ±2 ч, видимост според излагането на участъка на мъгла). Индексът на опасност (<see cref="HazardIndexCalculator"/>)
+/// и оценката по видимостта остават само за обясненията (условия, бележки).
 /// </summary>
-public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherProvider weather, TimeProvider clock)
+public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherProvider weather, TimeProvider clock, IRiskPredictor predictor)
 {
     private static readonly IReadOnlyDictionary<VehicleType, int> VehicleBonus = new Dictionary<VehicleType, int>
     {
         [VehicleType.Car] = 0, [VehicleType.Van] = 2, [VehicleType.Motorcycle] = 8, [VehicleType.Truck] = 6, [VehicleType.Bus] = 6
     };
+
+    private const int WindowHours = 2;
+
+    /// <summary>Метрики на ML модела (показват се до оценката).</summary>
+    public RiskModelInfo ModelInfo => predictor.ModelInfo;
 
     public RoadNetworkDto GetNetwork() => new(network.GetCities(), network.GetSegments());
 
@@ -79,7 +86,7 @@ public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherPro
                 new("incidents", "Инциденти, ремонти", (int)Math.Round(eval.Factors.Incidents)),
                 new("traffic", "Трафик", (int)Math.Round(eval.Factors.Traffic))
             ],
-            legs, departures, best.Hour, best.Score, path.Select(p => p.Segment.Id).ToList());
+            legs, departures, best.Hour, best.Score, path.Select(p => p.Segment.Id).ToList(), "ml", predictor.ModelInfo.IsReliable);
     }
 
     public static string Clock(double hours)
@@ -159,7 +166,11 @@ public sealed class RouteRiskService(IRoadNetworkRepository network, IWeatherPro
         var weatherHour = dayHours.FirstOrDefault(x => x.Hour == hh);
         var hazard = weatherHour is null ? null : HazardIndexCalculator.Calculate(weatherHour.ToObservation(vis));
         var hazardScore = hazard?.Score ?? 0;
-        double w = Math.Max(fogScore, hazardScore);
+        // ML оценка за прозореца от часове около този час (моделът е обучен върху обобщения на времето, не върху един час).
+        var window = dayHours.Where(x => Math.Abs(x.Hour - hh) <= WindowHours).Select(x => x.ToObservation(vis)).ToList();
+        double w = window.Count > 0
+            ? predictor.Predict(WeatherRiskFeatures.FromHours(window)).Score
+            : Math.Max(fogScore, hazardScore); // няма прогноза за часа – връщаме се към правилата
         var hist = e.History * 100;
         double inc = e.Incident is not null ? 70 : e.Repair is not null ? 45 : 5;
         double traffic = (hh is >= 7 and <= 9) || (hh is >= 17 and <= 19) ? 55 : 20;
