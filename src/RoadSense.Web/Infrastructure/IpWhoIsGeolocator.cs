@@ -7,7 +7,6 @@ namespace RoadSense.Web.Infrastructure;
 
 /// <summary>
 /// Реално местоположение по IP чрез безплатната услуга ipwho.is (без ключ).
-/// Включва се с "IpGeolocation": "IpWhoIs" в appsettings.json.
 /// За локален адрес (localhost, 192.168.x.x) няма как да се определи място — връща null
 /// и приложението показва района по подразбиране.
 /// </summary>

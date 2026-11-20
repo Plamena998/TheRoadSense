@@ -1,18 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
+using Microsoft.Extensions.Logging;
 using RoadSense.Infrastructure.Sql;
 
-// Създава/обновява базата RoadSense (EF миграции) и зарежда mock данните.
-// Използване: dotnet run --project src/RoadSense.DbTool [connectionString]
-var cs = args.Length > 0 ? args[0] : Environment.GetEnvironmentVariable("ROADSENSE_CONNECTION") ?? DbDefaults.ConnectionString;
+// Инструмент за базата RoadSense.
+//   dotnet run --project src/RoadSense.DbTool                   — миграции (ако има чакащи) + зареждане от CSV на празните таблици
+//   dotnet run --project src/RoadSense.DbTool -- export [папка] — записва всяка таблица в CSV файл (по подразбиране dataSource/seed)
+// Низ за връзка: ROADSENSE_CONNECTION или DbDefaults.ConnectionString. Папка с CSV за зареждане: ROADSENSE_SEED_PATH.
+var cs = Environment.GetEnvironmentVariable("ROADSENSE_CONNECTION") ?? DbDefaults.ConnectionString;
 await using var db = new RoadSenseDbContext(DbDefaults.Options(cs));
 
-Console.WriteLine("Прилагане на миграции...");
-await db.Database.MigrateAsync();
+if (args.Length > 0 && args[0].Equals("export", StringComparison.OrdinalIgnoreCase))
+{
+    var outDir = args.Length > 1 ? args[1] : Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../dataSource/seed"));
+    Console.WriteLine($"Износ към {outDir}");
+    foreach (var (table, count) in CsvData.Export(db, outDir)) Console.WriteLine($"  {table}.csv — {count} реда");
+    return;
+}
 
-Console.WriteLine("Зареждане на данни от MockData...");
-await MockDataSeeder.SeedAsync(db, Path.Combine(AppContext.BaseDirectory, "MockData"));
-
-Console.WriteLine("Зареждане на публични данни (МВР, Open-Meteo, АПИ)...");
-await PublicDataSeeder.SeedAsync(db, Path.Combine(AppContext.BaseDirectory, "PublicData"));
-
+using var loggerFactory = LoggerFactory.Create(b => b.AddSimpleConsole(o => o.SingleLine = true).SetMinimumLevel(LogLevel.Debug));
+await DatabaseInitializer.InitializeAsync(db, Environment.GetEnvironmentVariable("ROADSENSE_SEED_PATH"), loggerFactory.CreateLogger("DbTool"));
 Console.WriteLine("Готово.");

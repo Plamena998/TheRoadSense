@@ -2,7 +2,7 @@ using RoadSense.Domain;
 
 namespace RoadSense.Infrastructure.Sql;
 
-// EF таблици, изведени от структурата на mock данните (MockData/*.json).
+// EF таблици за данните на приложението (началните стойности са в dataSource/seed/*.csv).
 
 // ===== Пътна мрежа =====
 public class CityEntity

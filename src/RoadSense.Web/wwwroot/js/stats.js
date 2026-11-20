@@ -85,7 +85,7 @@
       const tail = (7 - ((c.leadingBlanks + c.days.length) % 7)) % 7;
       html += '<div class="day day--empty"></div>'.repeat(tail);
       $('calendar').innerHTML = html;
-      $('calNote').textContent = c.hasEvents ? 'Записи за месеца: ' + c.days.filter((d) => d.event).length : 'Няма записи в mockup данните за този месец.';
+      $('calNote').textContent = c.hasEvents ? 'Записи за месеца: ' + c.days.filter((d) => d.event).length : 'Няма записи за този месец.';
     } catch (err) { RS.showError($('calendar'), err); }
   }
 

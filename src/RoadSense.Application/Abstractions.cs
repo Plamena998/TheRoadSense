@@ -3,8 +3,7 @@ using RoadSense.Domain;
 namespace RoadSense.Application;
 
 // Интерфейсите, които всеки източник на данни трябва да реализира.
-// Сега ги реализира RoadSense.Infrastructure.Mock (JSON файлове);
-// по-късно ще ги реализира проект с EF Core и SQL база — фронтендът и услугите не се променят.
+// Реализира ги RoadSense.Infrastructure.Sql (EF Core и SQL Server); услугите и фронтендът зависят само от тези интерфейси.
 
 public interface IRoadNetworkRepository
 {

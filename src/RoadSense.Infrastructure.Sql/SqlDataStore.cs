@@ -5,7 +5,7 @@ using RoadSense.Domain;
 namespace RoadSense.Infrastructure.Sql;
 
 /// <summary>
-/// Реализация на всички интерфейси за данни върху SQL Server (EF Core). Заменя MockDataStore.
+/// Реализация на всички интерфейси за данни върху SQL Server (EF Core).
 /// Резултатите се държат в памет кратко време (справочните данни рядко се променят),
 /// така че сингълтон услугите не удрят базата при всяка заявка.
 /// </summary>

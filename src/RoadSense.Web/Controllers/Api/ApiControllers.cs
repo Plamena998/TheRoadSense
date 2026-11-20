@@ -8,7 +8,7 @@ using RoadSense.Web.Infrastructure;
 
 namespace RoadSense.Web.Controllers.Api;
 
-// JSON API, което ползва фронтендът. Едно и също е за mock и за реалните данни.
+// JSON API, което ползва фронтендът.
 
 [ApiController]
 [Route("api")]
