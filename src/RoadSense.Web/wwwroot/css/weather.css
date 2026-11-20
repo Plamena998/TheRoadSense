@@ -1,0 +1,61 @@
+/* =========== Времето около мен =========== */
+.loc-card { display: flex; flex-direction: column; gap: 16px; }
+.loc-map { position: relative; height: 170px; border-radius: 16px; overflow: hidden; background: #111713; }
+.loc-map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.loc-halo, .loc-ping, .loc-dot { position: absolute; left: 52%; top: 58%; border-radius: 50%; transform: translate(-50%, -50%); }
+.loc-halo { width: 54px; height: 54px; background: rgba(212,242,219,0.14); }
+.loc-ping { width: 16px; height: 16px; background: var(--muted); animation: locPing 1.8s var(--ease-out) infinite; }
+.loc-dot { width: 16px; height: 16px; background: var(--muted); border: 3px solid var(--text); }
+@keyframes locPing { 0% { transform: translate(-50%,-50%) scale(1); opacity: .6; } 100% { transform: translate(-50%,-50%) scale(3); opacity: 0; } }
+.loc-name { font-size: 28px; letter-spacing: -0.02em; margin: 6px 0; }
+
+.now-card { display: flex; flex-direction: column; gap: 22px; padding: 26px; }
+.now-card__top { display: flex; flex-wrap: wrap; gap: 20px 32px; justify-content: space-between; align-items: center; }
+.now-card__side { flex: 1 1 240px; display: flex; flex-direction: column; gap: 12px; }
+.now-card__feels { font-size: 15px; color: var(--text-2); margin-top: 6px; }
+.now-card__side { align-self: flex-end; }
+.wx-box { min-height: 125px; border-radius: 22px; padding: 18px 22px; display: flex; flex-direction: column; justify-content: center; color: #fff;
+  background: linear-gradient(100deg, var(--c1) 0%, var(--c2) 45%, var(--c3) 100%); box-shadow: 0 18px 40px var(--shadow), inset 0 0 0 1px rgba(255,255,255,.08);
+  transition: --c1 .8s, --c2 .8s, --c3 .8s, --shadow .8s; }
+.wx-box .label { color: #fff; opacity: .85; }
+.wx-box .now-card__feels { color: #fff; font-weight: 600; text-shadow: 0 2px 8px rgba(0,0,0,.3); }
+#previews .chip { height: 36px; padding: 0 12px; border-radius: 10px; font-size: 13px; background: #000; }
+#previews .chip[aria-pressed="true"] { background: var(--text); }
+.warnings { display: flex; flex-direction: column; gap: 10px; }
+.warning { padding: 14px 16px; border-radius: 16px; background: var(--red-night); border: 1px solid var(--red); color: var(--text); display: flex; gap: 12px; align-items: center; font-size: 14px; }
+.warning strong { display: block; font-size: 14px; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.metric { padding: 14px; border-radius: 14px; background: #000; border: 1px solid #1A211C; }
+.metric__label { font-size: 12px; font-weight: 700; color: var(--muted); }
+.metric__value { font-family: var(--font-mono); font-size: 22px; font-weight: 700; margin-top: 4px; }
+.metric__note { font-size: 12px; font-weight: 600; margin-top: 2px; color: var(--muted); }
+.metric__note.is-bad { color: var(--red); }
+
+.hours-scroll { margin-top: 14px; padding-bottom: 12px; }
+.hours { display: grid; grid-template-columns: repeat(24, 72px); gap: 6px; }
+.hour { height: 132px; border-radius: 14px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 10px 4px;
+  border: 1px solid #222B25; background: #000; color: var(--text); }
+.hour[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: #000; }
+.hour__t { font-size: 17px; font-weight: 800; }
+.hour__vis { font-family: var(--font-mono); font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 6px; color: var(--muted); }
+.hour__vis--fog { background: var(--red); color: #000; }
+.hour__vis--haze { background: var(--muted); color: #000; }
+
+.speed-card { display: flex; flex-direction: column; gap: 22px; padding: 26px; }
+.speed-card__top { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; }
+.speed-sign { width: 150px; height: 150px; flex: none; border-radius: 50%; background: var(--text); border: 14px solid var(--red); display: flex; align-items: center; justify-content: center; font-size: 54px; letter-spacing: -0.04em; color: #000; box-shadow: 0 0 0 2px #000; }
+.speed-card__title { font-size: 22px; font-weight: 800; margin-top: 8px; line-height: 1.25; }
+.speed-card__text { font-size: 15px; margin-top: 6px; color: #283129; }
+.speed-bars { display: flex; flex-direction: column; gap: 12px; }
+.speed-bars__row { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; font-weight: 700; }
+.track--light { height: 14px; border-radius: 7px; background: #BFE0C7; margin-top: 6px; }
+.factors-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.factors-list span { padding: 4px 10px; border-radius: 999px; background: #000; color: var(--text); font-size: 12px; font-weight: 700; }
+.speed-card__note { font-size: 12px; color: #3D5244; line-height: 1.5; }
+@media (hover: hover) and (pointer: fine) { .hour:hover { border-color: #637367; } }
+@media (prefers-reduced-motion: reduce) { .loc-ping { animation: none; } }
+
+/* източник на местоположението: GPS / мрежа / по подразбиране */
+.loc-source { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.loc-status { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--red); letter-spacing: 0; text-transform: none; }
+.loc-status:empty { display: none; }

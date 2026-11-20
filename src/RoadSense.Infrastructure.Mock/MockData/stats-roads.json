@@ -1,0 +1,308 @@
+[
+  {
+    "id": "A1",
+    "label": "А1 „Тракия“",
+    "fullName": "АМ „Тракия“ · София – Бургас",
+    "lengthKm": 360,
+    "crashesPerYear": 160,
+    "deathsPerYear": 22,
+    "injuredPerYear": 230,
+    "blackSpots": [
+      {
+        "km": 290,
+        "description": "п.в. Зимница — мъгла, верижни ПТП"
+      },
+      {
+        "km": 168,
+        "description": "Чирпан — тежкотоварни"
+      },
+      {
+        "km": 148,
+        "description": "наклон и завой"
+      }
+    ],
+    "regionWeights": {
+      "София (столица)": 3,
+      "Софийска": 2,
+      "Пазарджик": 3,
+      "Пловдив": 4,
+      "Стара Загора": 4,
+      "Ямбол": 6,
+      "Бургас": 3
+    },
+    "causes": [
+      {
+        "label": "Несъобразена скорост",
+        "percent": 34
+      },
+      {
+        "label": "Неспазване на дистанция",
+        "percent": 18
+      },
+      {
+        "label": "Лоша видимост и време",
+        "percent": 17
+      },
+      {
+        "label": "Умора и разсейване",
+        "percent": 13
+      },
+      {
+        "label": "Неправилно изпреварване",
+        "percent": 8
+      },
+      {
+        "label": "Други",
+        "percent": 10
+      }
+    ]
+  },
+  {
+    "id": "A2",
+    "label": "А2 „Хемус“",
+    "fullName": "АМ „Хемус“ · София – Ботевград, Шумен – Варна",
+    "lengthKm": 160,
+    "crashesPerYear": 70,
+    "deathsPerYear": 9,
+    "injuredPerYear": 105,
+    "blackSpots": [
+      {
+        "km": 52,
+        "description": "ремонти и стеснения"
+      },
+      {
+        "km": 18,
+        "description": "Витиня — наклон"
+      }
+    ],
+    "regionWeights": {
+      "София (столица)": 2,
+      "Софийска": 4,
+      "Шумен": 3,
+      "Варна": 3
+    },
+    "causes": [
+      {
+        "label": "Несъобразена скорост",
+        "percent": 34
+      },
+      {
+        "label": "Неспазване на дистанция",
+        "percent": 18
+      },
+      {
+        "label": "Неправилно изпреварване",
+        "percent": 14
+      },
+      {
+        "label": "Умора и разсейване",
+        "percent": 13
+      },
+      {
+        "label": "Лоша видимост и време",
+        "percent": 11
+      },
+      {
+        "label": "Други",
+        "percent": 10
+      }
+    ]
+  },
+  {
+    "id": "A3",
+    "label": "А3 „Струма“",
+    "fullName": "АМ „Струма“ · София – Кулата",
+    "lengthKm": 175,
+    "crashesPerYear": 75,
+    "deathsPerYear": 10,
+    "injuredPerYear": 110,
+    "blackSpots": [
+      {
+        "km": 120,
+        "description": "край на магистралата"
+      },
+      {
+        "km": 160,
+        "description": "граничен трафик"
+      }
+    ],
+    "regionWeights": {
+      "София (столица)": 2,
+      "Перник": 3,
+      "Кюстендил": 2,
+      "Благоевград": 5
+    },
+    "causes": [
+      {
+        "label": "Несъобразена скорост",
+        "percent": 34
+      },
+      {
+        "label": "Неправилно изпреварване",
+        "percent": 18
+      },
+      {
+        "label": "Неспазване на дистанция",
+        "percent": 14
+      },
+      {
+        "label": "Умора и разсейване",
+        "percent": 13
+      },
+      {
+        "label": "Лоша видимост и време",
+        "percent": 11
+      },
+      {
+        "label": "Други",
+        "percent": 10
+      }
+    ]
+  },
+  {
+    "id": "I1",
+    "label": "I-1 (Е79)",
+    "fullName": "Път I-1 (Е79) · Видин – Ботевград",
+    "lengthKm": 220,
+    "crashesPerYear": 130,
+    "deathsPerYear": 26,
+    "injuredPerYear": 190,
+    "blackSpots": [
+      {
+        "km": 40,
+        "description": "Монтана — пешеходци"
+      },
+      {
+        "km": 140,
+        "description": "превалът Петрохан"
+      }
+    ],
+    "regionWeights": {
+      "Софийска": 3,
+      "Враца": 4,
+      "Монтана": 5,
+      "Видин": 3
+    },
+    "causes": [
+      {
+        "label": "Несъобразена скорост",
+        "percent": 32
+      },
+      {
+        "label": "Неправилно изпреварване",
+        "percent": 20
+      },
+      {
+        "label": "Неспазване на дистанция",
+        "percent": 14
+      },
+      {
+        "label": "Умора и разсейване",
+        "percent": 13
+      },
+      {
+        "label": "Лоша видимост и време",
+        "percent": 11
+      },
+      {
+        "label": "Други",
+        "percent": 10
+      }
+    ]
+  },
+  {
+    "id": "I5",
+    "label": "I-5",
+    "fullName": "Път I-5 · Русе – Велико Търново",
+    "lengthKm": 105,
+    "crashesPerYear": 85,
+    "deathsPerYear": 15,
+    "injuredPerYear": 125,
+    "blackSpots": [
+      {
+        "km": 30,
+        "description": "Бяла — изпреварвания"
+      },
+      {
+        "km": 80,
+        "description": "тежкотоварни"
+      }
+    ],
+    "regionWeights": {
+      "Велико Търново": 4,
+      "Русе": 5
+    },
+    "causes": [
+      {
+        "label": "Неправилно изпреварване",
+        "percent": 30
+      },
+      {
+        "label": "Несъобразена скорост",
+        "percent": 28
+      },
+      {
+        "label": "Неспазване на дистанция",
+        "percent": 14
+      },
+      {
+        "label": "Умора и разсейване",
+        "percent": 12
+      },
+      {
+        "label": "Лоша видимост и време",
+        "percent": 6
+      },
+      {
+        "label": "Други",
+        "percent": 10
+      }
+    ]
+  },
+  {
+    "id": "I3",
+    "label": "I-3",
+    "fullName": "Път I-3 · Ботевград – Плевен",
+    "lengthKm": 115,
+    "crashesPerYear": 75,
+    "deathsPerYear": 13,
+    "injuredPerYear": 110,
+    "blackSpots": [
+      {
+        "km": 60,
+        "description": "Луковит — завои"
+      }
+    ],
+    "regionWeights": {
+      "Софийска": 3,
+      "Ловеч": 3,
+      "Плевен": 4
+    },
+    "causes": [
+      {
+        "label": "Несъобразена скорост",
+        "percent": 34
+      },
+      {
+        "label": "Неправилно изпреварване",
+        "percent": 18
+      },
+      {
+        "label": "Неспазване на дистанция",
+        "percent": 14
+      },
+      {
+        "label": "Умора и разсейване",
+        "percent": 13
+      },
+      {
+        "label": "Лоша видимост и време",
+        "percent": 11
+      },
+      {
+        "label": "Други",
+        "percent": 10
+      }
+    ]
+  }
+]

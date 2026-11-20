@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\RoadSense.Application\RoadSense.Application.csproj" />
+    <ProjectReference Include="..\RoadSense.Infrastructure.Mock\RoadSense.Infrastructure.Mock.csproj" />
+    <ProjectReference Include="..\RoadSense.Domain\RoadSense.Domain.csproj" />
+    <ProjectReference Include="..\RoadSense.Infrastructure.Sql\RoadSense.Infrastructure.Sql.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

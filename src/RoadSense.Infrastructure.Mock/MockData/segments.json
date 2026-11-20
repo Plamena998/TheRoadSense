@@ -1,0 +1,233 @@
+[
+  {
+    "id": "e1",
+    "fromCityId": "SOF",
+    "toCityId": "PDV",
+    "road": "А1",
+    "km": 135,
+    "fogExposure": 0.45,
+    "history": 0.6,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e2",
+    "fromCityId": "PDV",
+    "toCityId": "CHI",
+    "road": "А1",
+    "km": 50,
+    "fogExposure": 0.7,
+    "history": 0.4,
+    "incident": "ПТП преди 35 мин, изтеглено в аварийната лента",
+    "repair": null
+  },
+  {
+    "id": "e3",
+    "fromCityId": "CHI",
+    "toCityId": "SZR",
+    "road": "А1",
+    "km": 25,
+    "fogExposure": 0.78,
+    "history": 0.4,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e4",
+    "fromCityId": "SZR",
+    "toCityId": "ZIM",
+    "road": "А1",
+    "km": 85,
+    "fogExposure": 0.97,
+    "history": 0.9,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e5",
+    "fromCityId": "ZIM",
+    "toCityId": "KAR",
+    "road": "А1",
+    "km": 35,
+    "fogExposure": 0.85,
+    "history": 0.5,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e6",
+    "fromCityId": "KAR",
+    "toCityId": "BGS",
+    "road": "А1",
+    "km": 30,
+    "fogExposure": 0.5,
+    "history": 0.4,
+    "incident": null,
+    "repair": "ремонт на пътя, ограничение 60 км/ч"
+  },
+  {
+    "id": "e7",
+    "fromCityId": "SOF",
+    "toCityId": "BOT",
+    "road": "А2",
+    "km": 55,
+    "fogExposure": 0.35,
+    "history": 0.5,
+    "incident": null,
+    "repair": "ремонт при км 52, движение в една лента"
+  },
+  {
+    "id": "e8",
+    "fromCityId": "BOT",
+    "toCityId": "PLE",
+    "road": "I-3",
+    "km": 115,
+    "fogExposure": 0.6,
+    "history": 0.8,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e9",
+    "fromCityId": "PLE",
+    "toCityId": "VTR",
+    "road": "I-3",
+    "km": 120,
+    "fogExposure": 0.55,
+    "history": 0.6,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e10",
+    "fromCityId": "VTR",
+    "toCityId": "SHU",
+    "road": "I-4",
+    "km": 140,
+    "fogExposure": 0.4,
+    "history": 0.7,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e11",
+    "fromCityId": "SHU",
+    "toCityId": "VAR",
+    "road": "А2",
+    "km": 90,
+    "fogExposure": 0.3,
+    "history": 0.3,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e12",
+    "fromCityId": "SOF",
+    "toCityId": "PER",
+    "road": "А6",
+    "km": 30,
+    "fogExposure": 0.3,
+    "history": 0.4,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e13",
+    "fromCityId": "PER",
+    "toCityId": "BLG",
+    "road": "А3",
+    "km": 75,
+    "fogExposure": 0.3,
+    "history": 0.6,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e14",
+    "fromCityId": "BLG",
+    "toCityId": "KUL",
+    "road": "А3",
+    "km": 75,
+    "fogExposure": 0.2,
+    "history": 0.7,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e15",
+    "fromCityId": "CHI",
+    "toCityId": "HAS",
+    "road": "А4",
+    "km": 60,
+    "fogExposure": 0.6,
+    "history": 0.3,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e16",
+    "fromCityId": "HAS",
+    "toCityId": "KAP",
+    "road": "А4",
+    "km": 60,
+    "fogExposure": 0.5,
+    "history": 0.3,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e17",
+    "fromCityId": "SOF",
+    "toCityId": "KAL",
+    "road": "А6",
+    "km": 55,
+    "fogExposure": 0.25,
+    "history": 0.3,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e18",
+    "fromCityId": "BOT",
+    "toCityId": "MON",
+    "road": "I-1",
+    "km": 90,
+    "fogExposure": 0.7,
+    "history": 0.9,
+    "incident": "ПТП, затворено платно към Видин",
+    "repair": null
+  },
+  {
+    "id": "e19",
+    "fromCityId": "MON",
+    "toCityId": "VID",
+    "road": "I-1",
+    "km": 100,
+    "fogExposure": 0.75,
+    "history": 0.7,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e20",
+    "fromCityId": "VTR",
+    "toCityId": "RUS",
+    "road": "I-5",
+    "km": 105,
+    "fogExposure": 0.66,
+    "history": 0.7,
+    "incident": null,
+    "repair": null
+  },
+  {
+    "id": "e21",
+    "fromCityId": "VAR",
+    "toCityId": "BGS",
+    "road": "I-9",
+    "km": 130,
+    "fogExposure": 0.25,
+    "history": 0.6,
+    "incident": null,
+    "repair": null
+  }
+]

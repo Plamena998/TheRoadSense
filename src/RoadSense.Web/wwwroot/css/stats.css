@@ -1,0 +1,71 @@
+/* =========== Статистика =========== */
+.stats-head { display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: flex-end; justify-content: space-between; margin-top: 12px; }
+.section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.kpi { display: flex; flex-direction: column; gap: 6px; border-radius: 20px; padding: 20px; }
+.kpi__label { font-size: 13px; font-weight: 700; color: var(--muted); }
+.kpi__big { font-family: var(--font-display); font-weight: 800; font-size: 26px; letter-spacing: -0.02em; line-height: 1.15; }
+.kpi__list { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
+.kpi__row { display: grid; grid-template-columns: 96px minmax(0, 1fr) 26px; gap: 8px; align-items: center; font-size: 12px; }
+.kpi__row span:first-child { color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi__row .track { height: 6px; }
+.mini { height: 44px; gap: 2px; margin-top: 6px; border-bottom: 0; }
+.mini span { height: 100%; display: flex; align-items: flex-end; }
+.mini-axis { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+
+.km-bars { height: 220px; display: flex; gap: 4px; align-items: flex-end; border-bottom: 1px solid var(--line-3); }
+.km-bars > span { flex: 1 1 0; height: 100%; display: flex; align-items: flex-end; }
+.km-bars .bar { border-radius: 6px 6px 0 0; }
+.spots { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.spot { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border-radius: 12px; background: var(--red-night); border: 1px solid #5A1410; font-size: 13px; }
+.spot i { width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+.cause__row { display: flex; justify-content: space-between; font-size: 14px; }
+.cause .track { margin-top: 6px; }
+
+/* класация */
+.table-card { padding: 0; overflow-x: auto; }
+.ranking { width: 100%; min-width: 860px; border-collapse: collapse; font-size: 15px; }
+.ranking th { text-align: left; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 16px 8px; border-bottom: 1px solid var(--line); }
+.ranking th:first-child, .ranking td:first-child { padding-left: 20px; }
+.ranking td { padding: 14px 8px; border-bottom: 1px solid #1A211C; }
+.ranking .num { text-align: right; }
+.ranking .rank { font-size: 18px; color: var(--muted); width: 48px; }
+.per { display: flex; gap: 10px; align-items: center; }
+.per .track { flex: 1 1 auto; }
+.grade { width: 36px; height: 36px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 16px; color: #000; }
+.g-a { background: #D4F2DB; } .g-b { background: #B5D3BC; } .g-c { background: #7E9686; } .g-d { background: #FF5246; } .g-e { background: #FF3B30; }
+.g-f { background: #B3140B; } .grade.g-f { color: var(--text); }
+
+/* календар */
+.month-nav { display: flex; gap: 8px; align-items: center; flex: none; }
+.section-head--cal { flex-wrap: nowrap; align-items: flex-end; }
+.section-head--cal > div:first-child { min-width: 0; }
+@media (max-width: 760px) { .section-head--cal { flex-wrap: wrap; } }
+.round-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.round-btn { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--surface); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.month-label { display: inline-block; flex: none; width: 230px; white-space: nowrap; text-align: center; font-size: 20px; transition: text-shadow 400ms ease; }
+.month-label.has-events { text-shadow: 0 3px 4px rgba(179,20,11,0.9), 0 7px 9px rgba(179,20,11,0.45); }
+.calendar { max-width: 760px; margin-left: auto; margin-right: auto; padding: 16px; }
+.calendar__week, .calendar__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+.calendar__week { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 4px 8px; }
+.day { min-height: 72px; border-radius: 12px; padding: 8px 9px; display: flex; flex-direction: column; justify-content: space-between; gap: 4px; border: 1px solid #1A211C; background: var(--surface-2); }
+.day--empty { border: 0; background: transparent; }
+.day--today { border-color: var(--text); }
+.day--event { background: var(--red); border-color: var(--red); color: #000; }
+.day__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 4px; }
+.day__n { font-family: var(--font-display); font-weight: 800; font-size: 16px; }
+.day--weekend .day__n { color: var(--muted); }
+.day--event .day__n { color: #000; }
+.day__today { font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 5px; background: var(--text); color: #000; }
+.day__dead { font-family: var(--font-mono); font-size: 11px; font-weight: 700; }
+.day__info { display: flex; justify-content: flex-end; }
+.ibtn { width: 26px; height: 26px; padding: 0; border-radius: 50%; border: 1.5px solid #000; background: transparent; color: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 160ms var(--ease-out), background-color 150ms ease; }
+.ibtn:active { transform: scale(.92); }
+.tip__date { display: block; font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--red); letter-spacing: 0.04em; }
+.tip__text { display: block; font-size: 13px; line-height: 1.45; font-weight: 600; margin-top: 6px; }
+.tip__src { display: block; font-size: 11px; color: var(--muted); margin-top: 6px; }
+.calendar-legend { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; margin-top: 12px; }
+.calendar-legend i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; background: var(--red); vertical-align: -2px; margin-right: 8px; }
+@media (hover: hover) and (pointer: fine) { .ibtn:hover { background: var(--text); } .round-btn:not(:disabled):hover { border-color: #637367; } .ranking tbody tr:hover { background: #111713; } }
+@media (prefers-reduced-motion: reduce) { .tip { transform: none; } .ibtn:active { transform: none; } }

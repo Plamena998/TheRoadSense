@@ -1,0 +1,144 @@
+@{
+    ViewData["Title"] = "Времето около мен";
+    ViewData["Page"] = Pages.Weather;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/weather-widget.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/weather.css" asp-append-version="true" />
+}
+
+<div class="container">
+    <section class="row section">
+        <!-- Местоположение -->
+        <article class="card side loc-card">
+            <div class="loc-map" aria-hidden="true">
+                <svg viewBox="0 0 360 170" preserveAspectRatio="xMidYMid slice">
+                    <path d="M-10 110 L120 96 L210 84 L370 70" stroke="#39453C" stroke-width="6" fill="none" stroke-linecap="round"></path>
+                    <path d="M-10 110 L120 96 L210 84 L370 70" stroke="#FF3B30" stroke-width="3" fill="none" stroke-linecap="round"></path>
+                    <path d="M180 -10 L188 60 L196 180" stroke="#283129" stroke-width="4" fill="none"></path>
+                    <path d="M40 -10 L70 180" stroke="#222B25" stroke-width="3" fill="none"></path>
+                    <text x="250" y="64" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#FF3B30" id="locRoad">—</text>
+                </svg>
+                <span class="loc-halo"></span><span class="loc-ping"></span><span class="loc-dot"></span>
+            </div>
+            <div>
+                <div class="label loc-source"><span id="locSource">Местоположение</span><span class="loc-status" id="locStatus" aria-live="polite">определяне…</span></div>
+                <div class="h-display loc-name" id="locName">—</div>
+                <div class="mono small muted" id="locCoords">—</div>
+            </div>
+            <div class="chips">
+                <button type="button" class="chip press" id="gpsBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path></svg>
+                    Използвай GPS
+                </button>
+                <button type="button" class="chip press" disabled title="Скоро">Смени района</button>
+            </div>
+            <p class="small muted" id="gpsNote" hidden></p>
+        </article>
+
+        <!-- Сега -->
+        <article class="card grow now-card">
+            <div class="now-card__top">
+<div class="weather" id="widget" data-state="fog" data-night="0" role="img" aria-label="Времето">
+            <span class="bubble b1"></span>
+            <span class="bubble b2"></span>
+            <span class="bubble b3"></span>
+            <span class="bubble b4"></span>
+            <span class="bubble b5"></span>
+            <span class="bubble b6"></span>
+            <div class="weather__card">
+              <div class="weather__temp"><span id="wTemp">-</span><sup>°</sup></div>
+              <div class="weather__info">
+                <div class="weather__cond"><span id="wCond">—</span></div>
+                <div class="weather__meta"><span id="wCity">—</span> · <span id="wTimeLabel">Сега</span> : <span id="wTime">--:--</span></div>
+              </div>
+            </div>
+            <div class="layer fx"><div class="flash"></div></div>
+            <div class="layer snow">
+              <i style="--x: 4%; --s: 14px; --d: 5.2s; --delay: -1.1s; --drift: 12px">❅</i>
+              <i style="--x: 11%; --s: 19px; --d: 6.8s; --delay: -4.3s; --drift: -14px">❆</i>
+              <i style="--x: 18%; --s: 11px; --d: 4.6s; --delay: -2.7s; --drift: 8px">❅</i>
+              <i style="--x: 26%; --s: 16px; --d: 7.4s; --delay: -6.2s; --drift: -6px">❆</i>
+              <i style="--x: 33%; --s: 12px; --d: 5.9s; --delay: -0.4s; --drift: 18px">❅</i>
+              <i style="--x: 41%; --s: 21px; --d: 7.9s; --delay: -3.6s; --drift: -20px">❆</i>
+              <i style="--x: 48%; --s: 13px; --d: 4.3s; --delay: -5.1s; --drift: 10px">❅</i>
+              <i style="--x: 55%; --s: 17px; --d: 6.1s; --delay: -1.9s; --drift: -9px">❆</i>
+              <i style="--x: 62%; --s: 10px; --d: 5.5s; --delay: -7.3s; --drift: 15px">❅</i>
+              <i style="--x: 69%; --s: 20px; --d: 7.1s; --delay: -2.2s; --drift: -17px">❆</i>
+              <i style="--x: 76%; --s: 12px; --d: 4.9s; --delay: -4.8s; --drift: 6px">❅</i>
+              <i style="--x: 83%; --s: 15px; --d: 6.4s; --delay: -0.9s; --drift: -12px">❆</i>
+              <i style="--x: 90%; --s: 18px; --d: 5.7s; --delay: -6.6s; --drift: 20px">❅</i>
+              <i style="--x: 96%; --s: 11px; --d: 7.6s; --delay: -3.2s; --drift: -4px">❆</i>
+            </div>
+            <div class="icon">
+              <div class="sun"></div>
+              <div class="bolt b1"><i></i></div>
+              <div class="cloud">
+                <svg viewBox="0 0 160 112" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+                      <stop class="s1" offset="0"></stop>
+                      <stop class="s2" offset="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <path d="M38 104 A26 26 0 1 1 40.2 52.1 A36 36 0 0 1 110.1 44.6 A30 30 0 1 1 116 104 Z" fill="url(#glass)" stroke="#D4F2DB" stroke-opacity=".8" stroke-width="2" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+              <div class="drops"><i></i><i></i><i></i><i></i></div>
+              <div class="sparks"><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+            <div class="bolt b2"><i></i></div>
+            <div class="bolt b3"><i></i></div>
+            <div class="layer fog"><i></i><i></i><i></i></div>
+          </div>
+                <div class="now-card__side">
+                    <div class="wx-box" id="wxBox" data-state="fog" data-night="0">
+                        <div class="label"><span id="dateLabel">—</span> · <span id="curHour">--:--</span></div>
+                        <div class="now-card__feels" id="feels">—</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mono small muted" id="liveBox" aria-live="polite" hidden></div>
+            <div id="warnings" class="warnings"></div>
+            <div class="metrics" id="metrics"></div>
+        </article>
+    </section>
+
+    <!-- Почасово -->
+    <section class="card mt-l">
+        <div class="card__head">
+            <div><h2 class="h3">Прогноза за деня</h2><p class="card__sub">Избери час — скоростта по-долу се пресмята за него</p></div>
+            <span class="mono small muted">източник: Open-Meteo</span>
+        </div>
+        <div class="hscroll hours-scroll"><div class="hours" id="hours" role="group" aria-label="Час от денонощието"></div></div>
+    </section>
+
+    <!-- Скорост -->
+    <section class="row mt-l">
+        <article class="card side stack" style="gap:18px">
+            <div><h2 class="h3">Подходяща скорост за <span id="speedHour">--:--</span></h2><p class="card__sub">Според превозното средство, пътя, настилката и видимостта</p></div>
+            <div><div class="label">Превозно средство</div><div class="chips mt-s" data-group="vehicle"></div></div>
+            <div><div class="label">Път</div><div class="chips mt-s" data-group="road"></div></div>
+            <div><div class="label">Настилка</div><div class="chips mt-s" data-group="surface"></div></div>
+        </article>
+        <article class="card card--light grow speed-card" aria-live="polite">
+            <div class="speed-card__top">
+                <div class="speed-sign h-display" id="recSpeed">—</div>
+                <div style="flex:1 1 240px">
+                    <div class="label" style="color:#3D5244">Препоръчителна скорост, км/ч</div>
+                    <div class="speed-card__title" id="recTitle">—</div>
+                    <div class="speed-card__text" id="recText"></div>
+                </div>
+            </div>
+            <div class="speed-bars">
+                <div><div class="speed-bars__row"><span>Видимост</span><span class="mono" id="visLabel">—</span></div><div class="track track--light"><span class="bar-h" id="visBar"></span></div></div>
+                <div><div class="speed-bars__row"><span>Спирачен път при <span id="limitKmh">—</span> км/ч (ограничението)</span><span class="mono" id="stopLimitLabel">—</span></div><div class="track track--light"><span class="bar-h" id="stopLimitBar"></span></div></div>
+                <div><div class="speed-bars__row"><span>Спирачен път при <span id="recKmh">—</span> км/ч (препоръката)</span><span class="mono" id="stopRecLabel">—</span></div><div class="track track--light"><span class="bar-h" id="stopRecBar"></span></div></div>
+            </div>
+            <div class="factors-list" id="multipliers"></div>
+            <p class="speed-card__note">Как се смята (SpeedAdvisor): ограничението идва от базата според вида път и превозното средство. Препоръката е по-ниската от скоростта, при която спирачният път е по-къс от видимостта, и ограничението, умножено по коефициентите за валеж, сняг, лед, мъгла и пориви. Закръгля се надолу до 10 км/ч и никога не надвишава ограничението. Препоръката е за района, не за конкретния участък — винаги спазвай знаците.</p>
+        </article>
+    </section>
+</div>
+
+@section Scripts { <script src="~/js/weather.js" asp-append-version="true"></script> }

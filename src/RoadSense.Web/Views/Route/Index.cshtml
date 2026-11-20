@@ -1,0 +1,148 @@
+@model RouteViewModel
+@{
+    ViewData["Title"] = "Маршрут";
+    ViewData["Page"] = Pages.Route;
+    var init = new
+    {
+        cities = Model.Cities.Select(c => new { value = c.Id, label = c.Name, hint = c.Note }),
+        vehicles = new[]
+        {
+            new { value = "Car", label = "Лек автомобил", hint = "до 3,5 т" },
+            new { value = "Motorcycle", label = "Мотоциклет", hint = "по-уязвим при мокро" },
+            new { value = "Van", label = "Бус", hint = "до 3,5 т" },
+            new { value = "Truck", label = "Камион", hint = "над 3,5 т" },
+            new { value = "Bus", label = "Автобус", hint = "пътнически" }
+        },
+        from = Model.From, to = Model.To, hour = Model.Hour, vehicle = Model.Vehicle
+    };
+}
+@section Styles { <link rel="stylesheet" href="~/css/route.css" asp-append-version="true" /> }
+
+<div class="container">
+    <section class="page-head">
+        <div>
+            <p class="eyebrow">Оценка на риска по маршрут</p>
+            <h1 class="h-display h1 mt-s">Колко рисков е пътят ти?</h1>
+        </div>
+        <p>Моделът изчислява кога ще минеш през всеки участък и какви ще бъдат условията точно тогава.</p>
+    </section>
+
+    <!-- Форма -->
+    <section class="route-form" aria-label="Маршрут">
+        <div class="dd" data-dd="from">
+            <span class="label dd__label" id="lbl-from"><span class="pin-dot pin-dot--a">А</span>Откъде</span>
+            <button type="button" class="dd__btn press" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-from">
+                <span style="min-width:0"><span class="dd__value"></span><span class="dd__hint"></span></span>
+                <svg class="dd__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+            <ul class="dd__list" role="listbox" aria-labelledby="lbl-from" hidden></ul>
+        </div>
+        <button type="button" class="swap press" id="swap" aria-label="Размени началото и края">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"></path><path d="M3 8h14"></path><path d="m17 20 4-4-4-4"></path><path d="M21 16H7"></path></svg>
+        </button>
+        <div class="dd" data-dd="to">
+            <span class="label dd__label" id="lbl-to"><span class="pin-dot pin-dot--b">Б</span>Докъде</span>
+            <button type="button" class="dd__btn press" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-to">
+                <span style="min-width:0"><span class="dd__value"></span><span class="dd__hint"></span></span>
+                <svg class="dd__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+            <ul class="dd__list" role="listbox" aria-labelledby="lbl-to" hidden></ul>
+        </div>
+        <div class="dd" data-dd="vehicle">
+            <span class="label dd__label" id="lbl-veh">Превозно средство</span>
+            <button type="button" class="dd__btn press" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-veh">
+                <span style="min-width:0"><span class="dd__value"></span><span class="dd__hint"></span></span>
+                <svg class="dd__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+            <ul class="dd__list" role="listbox" aria-labelledby="lbl-veh" hidden></ul>
+        </div>
+
+        <div class="slider-block">
+            <div class="slider-block__head">
+                <label for="dep" class="label">Час на тръгване</label>
+                <span class="slider-block__times">
+                    <span class="mono slider-block__dep" id="depLabel">06:00</span>
+                    <span class="small" style="color:var(--text-2)">→ пристигане <strong class="mono" id="arrLabel">--:--</strong></span>
+                    <span class="next-day" id="nextDay" hidden>на следващия ден</span>
+                </span>
+            </div>
+            <input id="dep" type="range" min="0" max="23" step="1" value="@Model.Hour" class="hslider" />
+            <div class="ticks mono" aria-hidden="true">
+                @foreach (var h in new[] { 0, 3, 6, 9, 12, 15, 18, 21, 23 })
+                {
+                    <span style="left: @((h / 23.0 * 100).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture))%">@h.ToString("00")</span>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Карта + оценка -->
+    <section class="row mt-l">
+        <article class="card grow map-card">
+            <div class="card__head">
+                <div>
+                    <h2 class="h3" id="routeName">Маршрут</h2>
+                    <p class="mono card__sub" id="routeMeta">—</p>
+                </div>
+                <div class="legend" id="legend"></div>
+            </div>
+            <div class="map" id="map">
+                <svg viewBox="0 0 800 440" role="img" aria-label="Карта на България с маршрута, оцветен по риск" id="mapSvg">
+                    <path d="M70 40 L180 52 L300 70 L420 62 L520 40 L640 36 L742 92 L712 168 L690 218 L720 300 L650 330 L560 352 L520 372 L430 372 L330 384 L230 410 L140 414 L110 380 L96 310 L70 262 L60 200 L80 150 L62 100 Z" fill="#111713" stroke="#283129" stroke-width="1.5" stroke-linejoin="round"></path>
+                    <path d="M70 40 L180 52 L300 70 L420 62 L520 40 L640 36" fill="none" stroke="#39453C" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"></path>
+                    <g id="roads" fill="none" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="labels" font-family="Onest, sans-serif" font-size="12" font-weight="700" fill="#7E9686" paint-order="stroke" stroke="#111713" stroke-width="4"></g>
+                </svg>
+                <div id="pins"></div>
+            </div>
+        </article>
+
+        <aside class="card side score-card" aria-label="Оценка на модела" aria-live="polite">
+            <div class="card__head">
+                <span class="label">Оценка на риска</span>
+                <span class="mono small muted">mockup данни</span>
+            </div>
+            <div class="score-card__main">
+                <span class="h-display score-card__value" id="score">—</span>
+                <div><span class="lvl" id="levelBadge">—</span><div class="mono small muted mt-s">от 100</div></div>
+            </div>
+            <div class="scale">
+                <div class="scale__bar"><span></span><span></span><span></span><span></span></div>
+                <div class="scale__marker" id="marker"><span></span></div>
+            </div>
+            <p id="verdict" class="verdict">—</p>
+            <div>
+                <span class="h3" style="font-size:13px">Какво влияе на оценката</span>
+                <div id="factors" class="factors"></div>
+            </div>
+            <div class="best">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4F2DB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+                <div><div class="best__title" id="bestTitle">—</div><div class="small muted" id="bestText"></div></div>
+                <button type="button" class="btn press best__btn" id="bestBtn">Избери</button>
+            </div>
+        </aside>
+    </section>
+
+    <!-- Участъци + сравнение -->
+    <section class="row mt-l">
+        <article class="card grow">
+            <h2 class="h3">По пътя, участък по участък</h2>
+            <p class="card__sub">Часът е кога се очаква да минеш през участъка</p>
+            <div id="legs" class="legs"></div>
+        </article>
+        <article class="card side stack" style="gap:14px">
+            <div>
+                <h2 class="h3">Ако тръгнеш в друг час</h2>
+                <p class="card__sub">Оценка на същия маршрут при различен час на тръгване</p>
+            </div>
+            <div class="bars compare" id="compare"></div>
+            <div class="compare-labels mono" id="compareLabels"></div>
+            <div class="small" style="color:var(--text-2)">Избран час: <strong class="mono" id="selHour">—</strong> · риск <strong class="mono" id="selScore">—</strong></div>
+            <div class="model-note"><strong>Как се смята:</strong> RouteRiskService (C#) намира най-бързия път и оценява всеки участък: видимост и време (45%), история на ПТП (25%), инциденти и ремонти (20%), трафик (10%).</div>
+        </article>
+    </section>
+</div>
+
+<script id="route-init" type="application/json">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(init))</script>
+
+@section Scripts { <script src="~/js/route.js" asp-append-version="true"></script> }

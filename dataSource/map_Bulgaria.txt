@@ -1,0 +1,7 @@
+https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+
+https://nominatim.openstreetmap.org/search?format=json&countrycodes=bg&q=Велико Търново
+
+Изчисляване на маршрута по пътищата (Routing API) - OSRM (Open Source Routing Machine), който работи директно върху пътната мрежа на OpenStreetMap чрез заявка
+
+Overpass API - ремонти

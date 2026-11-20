@@ -1,0 +1,117 @@
+@model FirstAidContent
+@{
+    ViewData["Title"] = "Първа помощ";
+    ViewData["Page"] = Pages.FirstAid;
+    string TagClass(string tag) => tag switch { "Спешно" => "tag--urgent", "Важно" => "tag--important", _ => "tag--note" };
+}
+@section Styles { <link rel="stylesheet" href="~/css/firstaid.css" asp-append-version="true" /> }
+
+<div class="container">
+    <section class="fa-hero">
+        <div class="fa-hero__text">
+            <p class="eyebrow">Съвети и първа помощ при тежко ПТП</p>
+            <h1 class="h-display fa-hero__title">Първите минути<br />решават.</h1>
+            <p class="fa-hero__lead">Не е нужно да си лекар, за да помогнеш. Нужно е да знаеш реда: <strong>опази себе си, повикай помощ, помогни</strong>.</p>
+        </div>
+        <a href="tel:112" class="call-card press">
+            <div class="call-card__top">
+                <span class="h-display call-card__num">112</span>
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>
+            </div>
+            <div>
+                <div class="call-card__label">Кажи на диспечера</div>
+                <div class="call-card__grid">
+                    <div><strong>Къде</strong><span>път, километър, посока</span></div>
+                    <div><strong>Какво</strong><span>какво се е случило</span></div>
+                    <div><strong>Колко</strong><span>пострадали и в какво състояние</span></div>
+                    <div><strong>Опасности</strong><span>огън, гориво, мъгла, трафик</span></div>
+                </div>
+                <div class="call-card__foot">Не затваряй първи — диспечерът може да те води стъпка по стъпка.</div>
+            </div>
+        </a>
+    </section>
+
+    <!-- Стъпки -->
+    <section class="card steps mt-l">
+        <h2 class="h-display steps__title">При тежко ПТП — по ред</h2>
+        <div role="tablist" aria-label="Стъпки" class="steps__tabs">
+            @for (var i = 0; i < Model.Steps.Count; i++)
+            {
+                <button type="button" role="tab" id="tab-@i" aria-controls="panel-@i" aria-selected="@(i == 0 ? "true" : "false")" tabindex="@(i == 0 ? 0 : -1)" class="step-tab press">
+                    <span class="mono step-tab__n">0@(i + 1)</span><span class="step-tab__title">@Model.Steps[i].Title</span>
+                </button>
+            }
+        </div>
+        @for (var i = 0; i < Model.Steps.Count; i++)
+        {
+            var s = Model.Steps[i];
+            <div role="tabpanel" id="panel-@i" aria-labelledby="tab-@i" class="steps__panel" hidden="@(i != 0)">
+                <div class="steps__lead">
+                    <div class="h-display steps__n">0@(i + 1)</div>
+                    <div class="steps__name">@s.Title</div>
+                    <p class="steps__text">@s.Lead</p>
+                </div>
+                <ol class="steps__list">
+                    @for (var k = 0; k < s.Items.Count; k++)
+                    {
+                        <li><span class="mono">@(k + 1)</span><span>@s.Items[k]</span></li>
+                    }
+                </ol>
+            </div>
+        }
+    </section>
+
+    <section class="row mt-l" style="align-items:flex-start">
+        <article class="card grow">
+            <h2 class="h-display steps__title">Първа помощ при</h2>
+            <div class="acc mt-m">
+                @for (var i = 0; i < Model.Topics.Count; i++)
+                {
+                    var t = Model.Topics[i];
+                    <div class="acc__item">
+                        <button type="button" class="acc__btn" aria-expanded="@(i == 0 ? "true" : "false")" aria-controls="acc-@t.Id">
+                            <span class="tag @TagClass(t.Tag)">@t.Tag</span>
+                            <span class="acc__title">@t.Title</span>
+                            <svg class="acc__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                        </button>
+                        <ul class="acc__panel" id="acc-@t.Id" hidden="@(i != 0)">
+                            @foreach (var item in t.Items) { <li>@item</li> }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </article>
+
+        <div class="side stack" style="gap:16px">
+            <article class="card card--light">
+                <div class="mono small" style="font-weight:700;letter-spacing:.06em;color:#3D5244">ВЕРИЖНА КАТАСТРОФА В МЪГЛА</div>
+                <h3 class="h-display fog-title">Колите отзад продължават да идват.</h3>
+                <ul class="fog-list">
+                    <li>Аварийни светлини и изтегли колата максимално вдясно.</li>
+                    <li>Излез от страната далеч от движението и веднага отиди зад мантинелата.</li>
+                    <li>Не стой между колите и не се връщай за вещи.</li>
+                    <li>Предупреждавай идващите само от безопасно място — зад мантинелата.</li>
+                    <li>Звънни на 112 и кажи, че има мъгла и още коли идват.</li>
+                </ul>
+            </article>
+            <article class="card">
+                <h3 class="h3">Задължително в колата</h3>
+                <p class="card__sub">Отбележи какво имаш — запомня се в браузъра</p>
+                <div class="kit mt-m" id="kit">
+                    @for (var i = 0; i < Model.Kit.Count; i++)
+                    {
+                        <label class="kit__item"><input type="checkbox" data-kit="@i" /><span>@Model.Kit[i]</span></label>
+                    }
+                </div>
+                <div class="mono small muted mt-s" id="kitDone"></div>
+            </article>
+        </div>
+    </section>
+
+    <section class="disclaimer mt-l">
+        <p>Тази страница не замества обучение по първа помощ. Указанията следват общите препоръки на Европейския съвет по ресусцитация. Най-добре е да преминеш практически курс — например в Българския Червен кръст.</p>
+        <a href="https://www.redcross.bg" target="_blank" rel="noopener" class="btn btn--ghost press">Намери курс по първа помощ</a>
+    </section>
+</div>
+
+@section Scripts { <script src="~/js/firstaid.js" asp-append-version="true"></script> }

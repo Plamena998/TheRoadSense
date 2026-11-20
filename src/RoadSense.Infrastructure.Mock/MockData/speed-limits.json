@@ -1,0 +1,77 @@
+[
+  {
+    "roadType": "Town",
+    "vehicle": "Car",
+    "limitKmh": 50
+  },
+  {
+    "roadType": "OutsideTown",
+    "vehicle": "Car",
+    "limitKmh": 90
+  },
+  {
+    "roadType": "Motorway",
+    "vehicle": "Car",
+    "limitKmh": 140
+  },
+  {
+    "roadType": "Town",
+    "vehicle": "Motorcycle",
+    "limitKmh": 50
+  },
+  {
+    "roadType": "OutsideTown",
+    "vehicle": "Motorcycle",
+    "limitKmh": 90
+  },
+  {
+    "roadType": "Motorway",
+    "vehicle": "Motorcycle",
+    "limitKmh": 140
+  },
+  {
+    "roadType": "Town",
+    "vehicle": "Van",
+    "limitKmh": 50
+  },
+  {
+    "roadType": "OutsideTown",
+    "vehicle": "Van",
+    "limitKmh": 90
+  },
+  {
+    "roadType": "Motorway",
+    "vehicle": "Van",
+    "limitKmh": 140
+  },
+  {
+    "roadType": "Town",
+    "vehicle": "Truck",
+    "limitKmh": 50
+  },
+  {
+    "roadType": "OutsideTown",
+    "vehicle": "Truck",
+    "limitKmh": 80
+  },
+  {
+    "roadType": "Motorway",
+    "vehicle": "Truck",
+    "limitKmh": 100
+  },
+  {
+    "roadType": "Town",
+    "vehicle": "Bus",
+    "limitKmh": 50
+  },
+  {
+    "roadType": "OutsideTown",
+    "vehicle": "Bus",
+    "limitKmh": 80
+  },
+  {
+    "roadType": "Motorway",
+    "vehicle": "Bus",
+    "limitKmh": 100
+  }
+]

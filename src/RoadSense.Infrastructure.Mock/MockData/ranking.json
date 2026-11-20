@@ -1,0 +1,72 @@
+[
+  {
+    "road": "I-1 (Е79)",
+    "section": "Видин – Ботевград",
+    "lengthKm": 220,
+    "crashes": 650,
+    "deaths": 130
+  },
+  {
+    "road": "I-5",
+    "section": "Русе – Велико Търново",
+    "lengthKm": 105,
+    "crashes": 425,
+    "deaths": 75
+  },
+  {
+    "road": "I-3",
+    "section": "Ботевград – Плевен",
+    "lengthKm": 115,
+    "crashes": 375,
+    "deaths": 65
+  },
+  {
+    "road": "I-9",
+    "section": "Варна – Бургас",
+    "lengthKm": 130,
+    "crashes": 410,
+    "deaths": 62
+  },
+  {
+    "road": "II-86",
+    "section": "Пловдив – Смолян",
+    "lengthKm": 100,
+    "crashes": 260,
+    "deaths": 41
+  },
+  {
+    "road": "I-8",
+    "section": "Пловдив – Капитан Андреево",
+    "lengthKm": 150,
+    "crashes": 380,
+    "deaths": 52
+  },
+  {
+    "road": "А1 „Тракия“",
+    "section": "София – Бургас",
+    "lengthKm": 360,
+    "crashes": 800,
+    "deaths": 110
+  },
+  {
+    "road": "I-2",
+    "section": "Русе – Варна",
+    "lengthKm": 200,
+    "crashes": 420,
+    "deaths": 58
+  },
+  {
+    "road": "I-6",
+    "section": "Кюстендил – Бургас",
+    "lengthKm": 480,
+    "crashes": 900,
+    "deaths": 115
+  },
+  {
+    "road": "А3 „Струма“",
+    "section": "София – Кулата",
+    "lengthKm": 175,
+    "crashes": 375,
+    "deaths": 50
+  }
+]

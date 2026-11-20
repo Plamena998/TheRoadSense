@@ -1,0 +1,105 @@
+@model StatsViewModel
+@{
+    ViewData["Title"] = "Статистика";
+    ViewData["Page"] = Pages.Stats;
+    var gradeClass = new Dictionary<string, string> { ["А"] = "g-a", ["Б"] = "g-b", ["В"] = "g-c", ["Г"] = "g-d", ["Д"] = "g-e", ["Е"] = "g-f" };
+    var maxPer = Model.Ranking.Max(r => r.DeathsPer100Km);
+    var inv = System.Globalization.CultureInfo.InvariantCulture;
+}
+@section Styles { <link rel="stylesheet" href="~/css/stats.css" asp-append-version="true" /> }
+
+<div class="container">
+    <!-- А: статистика по път -->
+    <section class="section">
+        <p class="eyebrow">Статистика по път</p>
+        <div class="stats-head">
+            <h1 class="h-display h1" id="roadName">@Model.Roads[0].FullName</h1>
+            <div class="chips" role="group" aria-label="Период" id="periods">
+                <button type="button" class="chip press" data-period="2025" aria-pressed="false">2025</button>
+                <button type="button" class="chip press" data-period="2026" aria-pressed="false">2026</button>
+                <button type="button" class="chip press" data-period="all" aria-pressed="true">2025–2026</button>
+            </div>
+        </div>
+        <div class="chips mt-m" role="group" aria-label="Път" id="roads">
+            @for (var i = 0; i < Model.Roads.Count; i++)
+            {
+                <button type="button" class="chip press" data-road="@Model.Roads[i].Id" aria-pressed="@(i == 0 ? "true" : "false")">@Model.Roads[i].Label</button>
+            }
+        </div>
+    </section>
+
+    <section class="kpis mt-m" id="kpis" aria-live="polite">
+        <div class="card kpi"><div class="kpi__label">Загинали</div><div class="kpi__value" style="color:var(--red)" id="kDeaths">—</div><div class="small muted" id="kDeathsSub"></div></div>
+        <div class="card kpi"><div class="kpi__label">По области</div><div class="kpi__big" id="kRegion">—</div><div class="kpi__list" id="kRegions"></div></div>
+        <div class="card kpi"><div class="kpi__label">По месеци</div><div class="kpi__big" id="kMonth">—</div>
+            <div class="bars mini" id="kMonths" style="grid-template-columns:repeat(12,minmax(0,1fr))"></div>
+            <div class="mini-axis mono"><span>ян</span><span>юни</span><span>дек</span></div><div class="small muted" id="kMonthSub"></div></div>
+        <div class="card kpi"><div class="kpi__label">По час</div><div class="kpi__big" id="kHour">—</div>
+            <div class="bars mini" id="kHours" style="grid-template-columns:repeat(24,minmax(0,1fr))"></div>
+            <div class="mini-axis mono"><span>00</span><span>12</span><span>23</span></div><div class="small muted" id="kHourSub"></div></div>
+    </section>
+
+    <section class="row mt-m">
+        <article class="card grow">
+            <div class="card__head"><div><h2 class="h3">Къде стават катастрофите</h2><p class="card__sub">Тежки ПТП по километри · червено = черна точка</p></div><span class="mono small muted">mockup данни</span></div>
+            <div class="bars km-bars mt-m" id="bins"></div>
+            <div class="mini-axis mono mt-s"><span>км 0</span><span id="midKm"></span><span id="endKm"></span></div>
+            <div class="spots" id="spots"></div>
+        </article>
+        <article class="card side stack" style="gap:12px">
+            <h2 class="h3">Основни причини</h2>
+            <div id="causes" class="stack" style="gap:12px"></div>
+            <p class="small muted" style="margin-top:auto">Причините в реалната версия идват от данните на МВР за „първо нарушение на водача“.</p>
+        </article>
+    </section>
+
+    <!-- Б: класация (рендерира се на сървъра) -->
+    <section class="mt-xl">
+        <div class="section-head">
+            <div><p class="eyebrow">Класация</p><h2 class="h-display h2 mt-s">Най-опасните пътища в България</h2></div>
+            <span class="small muted">загинали на 100 км път · 2021–2025 · mockup данни</span>
+        </div>
+        <div class="card table-card mt-m">
+            <table class="ranking">
+                <thead><tr><th>#</th><th>Път</th><th class="num">Дължина</th><th class="num">Тежки ПТП</th><th class="num">Загинали</th><th style="width:32%">Загинали на 100 км</th><th>Оценка</th></tr></thead>
+                <tbody>
+                @foreach (var r in Model.Ranking)
+                {
+                    <tr>
+                        <td class="rank h-display">@r.Rank</td>
+                        <td><div style="font-weight:800">@r.Road</div><div class="small muted">@r.Section</div></td>
+                        <td class="num mono">@r.LengthKm км</td>
+                        <td class="num mono">@r.Crashes</td>
+                        <td class="num mono" style="color:var(--red);font-weight:700">@r.Deaths</td>
+                        <td><div class="per"><span class="track"><span class="bar-h @gradeClass[r.Grade]" style="transform:scaleX(@((r.DeathsPer100Km / maxPer).ToString("0.000", inv)))"></span></span><span class="mono">@r.DeathsPer100Km.ToString("0.0")</span></div></td>
+                        <td><span class="grade @gradeClass[r.Grade]">@r.Grade</span></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- В: черен календар -->
+    <section class="mt-xl">
+        <div class="section-head section-head--cal">
+            <div><p class="eyebrow">Черен календар</p><h2 class="h-display h2 mt-s">Дни, които не бива да се повтарят</h2></div>
+            <div class="month-nav">
+                <button type="button" class="round-btn press" id="prevMonth" aria-label="Предишен месец"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg></button>
+                <span class="month-label h-display" id="monthLabel" aria-live="polite">—</span>
+                <button type="button" class="round-btn press" id="nextMonth" aria-label="Следващ месец"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg></button>
+            </div>
+        </div>
+        <div class="card calendar mt-m">
+            <div class="calendar__week"><span>Пон</span><span>Вт</span><span>Ср</span><span>Чет</span><span>Пет</span><span>Съб</span><span>Нед</span></div>
+            <div class="calendar__grid" id="calendar"></div>
+        </div>
+        <div class="calendar-legend small muted">
+            <span><i></i>Ден с тежко ПТП с жертви · † е броят загинали · посочи ⓘ за подробности</span>
+            <span id="calNote"></span>
+        </div>
+    </section>
+</div>
+
+<script id="stats-init" type="application/json">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(new { road = Model.Roads[0].Id, year = Model.Year, month = Model.Month }))</script>
+@section Scripts { <script src="~/js/stats.js" asp-append-version="true"></script> }

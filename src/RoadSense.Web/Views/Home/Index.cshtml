@@ -1,0 +1,295 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Начало";
+    ViewData["Page"] = Pages.Home;
+    var stats = Model.Content.Stats;
+}
+@section Styles { <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" /> }
+
+@section TopBar {
+    <div class="emergency">
+        <div class="container emergency__inner">
+            <span>При тежко ПТП: обезопаси мястото · звънни на <strong class="mono">112</strong> · окажи първа помощ</span>
+            <a asp-controller="FirstAid" asp-action="Index">Какво точно да направя →</a>
+        </div>
+    </div>
+}
+
+<!-- ===== Hero ===== -->
+<section class="container hero">
+    <div class="hero__live mono"><span class="ping" aria-hidden="true"><span></span><span></span></span>НА ЖИВО · ВРЕМЕ · КАТАСТРОФИ</div>
+    <h1 class="h-display hero__title">Пътят не прощава.<br /><span>Информацията спасява.</span></h1>
+    <div class="hero__row">
+        <p class="hero__lead">RoadSense събира на едно място времето и катастрофите по пътищата на България и ти казва колко рисков е пътят ти — <strong>преди да тръгнеш</strong>.</p>
+        <div class="hero__actions">
+            <a asp-controller="Route" asp-action="Index" class="btn btn--red btn--lg press">Провери маршрут
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+            </a>
+            <a asp-controller="Weather" asp-action="Index" class="btn btn--ghost btn--lg press">Времето около мен</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== История при скрол: залепнала сцена с 6 стъпки ===== -->
+<section id="story" class="story" aria-label="Пътищата в числа">
+    <div class="story__stage">
+        <div class="story__camera" aria-hidden="true">
+            <div class="story__strip">
+          <!-- 0 · Начало (интро) -->
+          <div class="scene">
+            <svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0; width: 100%; height: 100%">
+              <defs><linearGradient id="sk0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000000"></stop><stop offset="0.62" stop-color="#0F1411"></stop></linearGradient></defs>
+              <rect width="960" height="540" fill="url(#sk0)"></rect>
+              <rect y="336" width="960" height="204" fill="#000000"></rect>
+              <path d="M220 540 L470 338 L490 338 L740 540 Z" fill="#111713"></path>
+              <path d="M480 352 L480 366 M480 384 L480 404 M480 428 L480 462 M480 492 L480 540" stroke="#2F3A32" stroke-width="4" stroke-linecap="round"></path>
+              <path d="M120 540 L466 338 M840 540 L494 338" stroke="#1A211C" stroke-width="3"></path>
+              <defs><linearGradient id="hz0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A211C" stop-opacity="0"></stop><stop offset="0.5" stop-color="#1A211C" stop-opacity="1"></stop><stop offset="1" stop-color="#1A211C" stop-opacity="0"></stop></linearGradient></defs><rect y="300" width="960" height="80" fill="url(#hz0)"></rect>
+            </svg>
+          </div>
+          <!-- 1 · Здрач -->
+          <div class="scene">
+            <svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0; width: 100%; height: 100%">
+              <defs><linearGradient id="sk1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0A0E0B"></stop><stop offset="0.62" stop-color="#3A1512"></stop><stop offset="0.66" stop-color="#1A0B0A"></stop></linearGradient><radialGradient id="sunhalo"><stop offset="0" stop-color="#FF3B30" stop-opacity="0.95"></stop><stop offset="0.4" stop-color="#FF3B30" stop-opacity="0.4"></stop><stop offset="1" stop-color="#FF3B30" stop-opacity="0"></stop></radialGradient></defs>
+              <rect width="960" height="540" fill="url(#sk1)"></rect>
+              <circle class="sunglow" cx="560" cy="318" r="170" fill="url(#sunhalo)"></circle>
+              <circle class="sunglow2" cx="560" cy="318" r="80" fill="url(#sunhalo)"></circle>
+              <circle class="sunbody" cx="560" cy="318" r="48" fill="#FF3B30"></circle>
+              <rect y="336" width="960" height="204" fill="#0A0E0B"></rect>
+              <path d="M220 540 L470 338 L490 338 L740 540 Z" fill="#1A211C"></path>
+              <path d="M480 352 L480 366 M480 384 L480 404 M480 428 L480 462 M480 492 L480 540" stroke="#D4F2DB" stroke-width="4" stroke-linecap="round"></path>
+              <path d="M120 540 L466 338 M840 540 L494 338" stroke="#2F3A32" stroke-width="3"></path>
+              <defs><linearGradient id="hz1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5A1A10" stop-opacity="0"></stop><stop offset="0.5" stop-color="#5A1A10" stop-opacity="0.9"></stop><stop offset="1" stop-color="#5A1A10" stop-opacity="0"></stop></linearGradient></defs><rect y="296" width="960" height="90" fill="url(#hz1)"></rect>
+            </svg>
+          </div>
+          <!-- 2 · Дъжд -->
+          <div class="scene">
+            <svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0; width: 100%; height: 100%">
+              <rect width="960" height="540" fill="#141A16"></rect>
+              <rect y="336" width="960" height="204" fill="#0A0E0B"></rect>
+              <path d="M220 540 L470 338 L490 338 L740 540 Z" fill="#283129"></path>
+              <path d="M300 540 L476 338 L484 338 L660 540 Z" fill="#39453C" opacity="0.35"></path>
+              <defs><linearGradient id="hz2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#344038" stop-opacity="0"></stop><stop offset="0.5" stop-color="#344038" stop-opacity="0.95"></stop><stop offset="1" stop-color="#344038" stop-opacity="0"></stop></linearGradient></defs><rect y="296" width="960" height="90" fill="url(#hz2)"></rect>
+              <path d="M480 352 L480 366 M480 384 L480 404 M480 428 L480 462 M480 492 L480 540" stroke="#B5D3BC" stroke-width="4" stroke-linecap="round"></path>
+              <defs>
+                <pattern id="rainNear" width="70" height="120" patternUnits="userSpaceOnUse"><path d="M12 0 L12 30 M47 62 L47 88" stroke="#B5D3BC" stroke-width="1.6" stroke-linecap="round" opacity="0.75"></path></pattern>
+                <pattern id="rainFar" width="40" height="120" patternUnits="userSpaceOnUse"><path d="M8 10 L8 26 M28 70 L28 84" stroke="#7E9686" stroke-width="1" stroke-linecap="round" opacity="0.6"></path></pattern>
+              </defs>
+              <g transform="skewX(-12)">
+                <g class="rain-far"><rect x="-200" y="-240" width="1500" height="900" fill="url(#rainFar)"></rect></g>
+                <g class="rain-near"><rect x="-200" y="-240" width="1500" height="900" fill="url(#rainNear)"></rect></g>
+              </g>
+            </svg>
+          </div>
+          <!-- 3 · Нощ -->
+          <div class="scene">
+            <svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0; width: 100%; height: 100%">
+              <rect width="960" height="540" fill="#000000"></rect>
+              <path d="M200 540 L472 336 L488 336 L760 540 Z" fill="#111713"></path>
+              <path d="M480 350 L480 362 M480 380 L480 398 M480 422 L480 454 M480 486 L480 540" stroke="#4D5C51" stroke-width="4" stroke-linecap="round"></path>
+              <defs><linearGradient id="hz3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A211C" stop-opacity="0"></stop><stop offset="0.5" stop-color="#1A211C" stop-opacity="1"></stop><stop offset="1" stop-color="#1A211C" stop-opacity="0"></stop></linearGradient></defs><rect y="300" width="960" height="80" fill="url(#hz3)"></rect>
+              <defs>
+                <filter id="lampGlow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="4" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+                <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D4F2DB" stop-opacity="0.22"></stop><stop offset="1" stop-color="#D4F2DB" stop-opacity="0"></stop></linearGradient>
+              </defs>
+              <!-- коли в нашата посока: червени стопове, отдалечават се -->
+              <g class="car-away" style="animation-delay: 0s"><g filter="url(#lampGlow)" fill="#FF3B30"><circle cx="-22" cy="0" r="7"></circle><circle cx="22" cy="0" r="7"></circle></g></g>
+              <g class="car-away" style="animation-delay: -1.2s"><g filter="url(#lampGlow)" fill="#FF3B30"><circle cx="-22" cy="0" r="7"></circle><circle cx="22" cy="0" r="7"></circle></g></g>
+              <g class="car-away" style="animation-delay: -2.4s"><g filter="url(#lampGlow)" fill="#FF3B30"><circle cx="-22" cy="0" r="7"></circle><circle cx="22" cy="0" r="7"></circle></g></g>
+              <!-- насрещни коли: бели фарове със сноп светлина, приближават -->
+              <g class="car-on" style="animation-delay: 0s"><path d="M-30 4 L-120 150 L120 150 L30 4 Z" fill="url(#beam)"></path><g filter="url(#lampGlow)" fill="#D4F2DB"><circle cx="-20" cy="0" r="6"></circle><circle cx="20" cy="0" r="6"></circle></g></g>
+              <g class="car-on" style="animation-delay: -1.45s"><path d="M-30 4 L-120 150 L120 150 L30 4 Z" fill="url(#beam)"></path><g filter="url(#lampGlow)" fill="#D4F2DB"><circle cx="-20" cy="0" r="6"></circle><circle cx="20" cy="0" r="6"></circle></g></g>
+            </svg>
+          </div>
+          <!-- 4 · Мъгла -->
+          <div class="scene">
+            <svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0; width: 100%; height: 100%">
+              <defs><linearGradient id="fg4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7E9686" stop-opacity="0.6"></stop><stop offset="0.7" stop-color="#B5D3BC" stop-opacity="0.55"></stop><stop offset="1" stop-color="#B5D3BC" stop-opacity="0.15"></stop></linearGradient></defs>
+              <rect width="960" height="540" fill="#4D5C51"></rect>
+              <path d="M220 540 L470 338 L490 338 L740 540 Z" fill="#2F3A32"></path>
+              <path d="M480 470 L480 500 M480 512 L480 540" stroke="#B5D3BC" stroke-width="4" stroke-linecap="round"></path>
+              <defs><linearGradient id="hz4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B5D3BC" stop-opacity="0"></stop><stop offset="0.5" stop-color="#B5D3BC" stop-opacity="0.8"></stop><stop offset="1" stop-color="#B5D3BC" stop-opacity="0"></stop></linearGradient></defs><rect y="290" width="960" height="100" fill="url(#hz4)"></rect>
+              <g fill="#FF3B30" opacity="0.85"><circle cx="452" cy="420" r="5"></circle><circle cx="480" cy="420" r="5"></circle></g>
+              <rect class="fogb" width="960" height="540" fill="url(#fg4)"></rect>
+              <defs><filter id="fogBlur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="18"></feGaussianBlur></filter></defs>
+              <g filter="url(#fogBlur)" fill="#D4F2DB">
+                <ellipse class="fogl" cx="300" cy="300" rx="260" ry="46"></ellipse>
+                <ellipse class="fogl" cx="680" cy="380" rx="240" ry="40" style="animation-duration: 8.5s; animation-direction: alternate-reverse"></ellipse>
+                <ellipse class="fogl" cx="480" cy="465" rx="320" ry="44" style="animation-duration: 7s"></ellipse>
+              </g>
+            </svg>
+          </div>
+          <!-- 5 · Мъгла и аварийни светлини -->
+          <div class="scene">
+            <svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0; width: 100%; height: 100%">
+              <rect width="960" height="540" fill="#4D5C51"></rect>
+              <path d="M200 540 L470 338 L490 338 L760 540 Z" fill="#283129"></path>
+              <defs><linearGradient id="hz5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B5D3BC" stop-opacity="0"></stop><stop offset="0.5" stop-color="#B5D3BC" stop-opacity="0.85"></stop><stop offset="1" stop-color="#B5D3BC" stop-opacity="0"></stop></linearGradient></defs><rect y="290" width="960" height="100" fill="url(#hz5)"></rect>
+            </svg>
+            <div class="fogb" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(181,211,188,0.7) 0%, rgba(181,211,188,0.4) 70%, rgba(181,211,188,0.15) 100%)"></div>
+            <span style="position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 700; color: #000000; background: #FF3B30; padding: 4px 10px; border-radius: 6px">АМ „ТРАКИЯ“ · КМ 290</span>
+          </div>
+            </div>
+        </div>
+        <div class="story__vignette" aria-hidden="true"></div>
+
+        <h2 class="story__intro">Всеки ден по пътищата на България някой <span>не се прибира</span>.</h2>
+
+        <div class="story__stats">
+            @foreach (var s in stats)
+            {
+                <p class="stat"><span class="stat__n">@s.Value</span><span class="stat__unit">@s.Unit</span></p>
+            }
+        </div>
+        <div class="story__descs">
+            @foreach (var s in stats)
+            {
+                <p class="desc" data-source="@s.Source">@s.Description</p>
+            }
+            <span class="story__src mono">@stats[0].Source</span>
+        </div>
+
+        <div class="story__outro">
+            <p class="mono story__outro-eyebrow">10.11.2026 · П.В. ЗИМНИЦА · ГЪСТА МЪГЛА</p>
+            <h2 class="h-display">Можеше да се види<br />отдалеч.</h2>
+            <p>RoadSense предупреждава за мъгла, лед и катастрофи по маршрута ти — <b>минути преди да стигнеш до тях</b>.</p>
+        </div>
+    </div>
+</section>
+
+<button type="button" class="cue" aria-label="Към следващата стъпка">
+    Скролни
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+
+<!-- ===== Лента на живо ===== -->
+<section class="ticker" aria-label="Последни предупреждения">
+    <div class="ticker__track">
+        @for (var round = 0; round < 2; round++)
+        {
+            foreach (var t in Model.Ticker)
+            {
+                <div class="ticker__item" aria-hidden="@(round == 1 ? "true" : null)">
+                    <span class="ticker__dot ticker__dot--@t.Level"></span>
+                    <span class="mono ticker__road">@t.Road</span>
+                    <span class="muted">@t.Text</span>
+                </div>
+            }
+        }
+    </div>
+</section>
+
+<!-- ===== Какво те чака по пътя днес ===== -->
+<section class="tiles-section">
+    <div class="container tiles-head reveal">
+        <h2 class="h-display h-section">Какво те чака по пътя днес</h2>
+    </div>
+    <!-- безкрайна лента: плочките се въртят сами, при посочване спират -->
+    <div class="marquee reveal">
+        <div class="marquee__track">
+        <div class="tiles">
+            <a asp-controller="Weather" asp-action="Index" class="tile lift press">
+                <div class="tile__art tile__art--fog"><svg viewBox="0 0 300 190" aria-hidden="true"><path d="M110 190 L142 40 L158 40 L190 190 Z" fill="#1A211C"></path><path d="M150 52 L150 70 M150 88 L150 112 M150 132 L150 162" stroke="#D4F2DB" stroke-width="3" stroke-linecap="round"></path><path d="M118 190 L144 40 M182 190 L156 40" stroke="#39453C" stroke-width="1.5"></path></svg><span class="tile__badge tile__badge--dark mono">ВИДИМОСТ 80 М</span></div>
+                <div class="tile__body"><span class="tile__title">Мъгла</span><span class="tile__text">Видимост под 100 м по магистралата — препоръчителна скорост 50 км/ч.</span></div>
+            </a>
+            <a asp-controller="Weather" asp-action="Index" class="tile lift press">
+                <div class="tile__art tile__art--rain"><svg viewBox="0 0 300 190" aria-hidden="true"><path d="M110 190 L142 40 L158 40 L190 190 Z" fill="#1A211C"></path><path d="M150 52 L150 70 M150 88 L150 112 M150 132 L150 162" stroke="#B5D3BC" stroke-width="3" stroke-linecap="round"></path><path d="M118 190 L144 40 M182 190 L156 40" stroke="#39453C" stroke-width="1.5"></path></svg><span class="tile__badge tile__badge--grey mono">4 ММ/Ч</span></div>
+                <div class="tile__body"><span class="tile__title">Дъжд</span><span class="tile__text">Мокрият път удвоява спирачния път. Аквапланинг над 80 км/ч.</span></div>
+            </a>
+            <a asp-controller="Weather" asp-action="Index" class="tile lift press">
+                <div class="tile__art tile__art--ice"><svg viewBox="0 0 300 190" aria-hidden="true"><path d="M110 190 L142 40 L158 40 L190 190 Z" fill="#1A211C"></path><path d="M150 52 L150 70 M150 88 L150 112 M150 132 L150 162" stroke="#D4F2DB" stroke-width="3" stroke-linecap="round"></path><path d="M118 190 L144 40 M182 190 L156 40" stroke="#39453C" stroke-width="1.5"></path></svg><span class="tile__badge tile__badge--mint mono">−1°C НАСТИЛКА</span></div>
+                <div class="tile__body"><span class="tile__title">Поледица</span><span class="tile__text">Мостовете и надлезите замръзват първи — дори при 2°C.</span></div>
+            </a>
+            <a asp-controller="Stats" asp-action="Index" class="tile lift press">
+                <div class="tile__art tile__art--spots"><svg viewBox="0 0 300 190" aria-hidden="true"><path d="M110 190 L142 40 L158 40 L190 190 Z" fill="#1A211C"></path><path d="M150 52 L150 70 M150 88 L150 112 M150 132 L150 162" stroke="#FF3B30" stroke-width="3" stroke-linecap="round"></path><path d="M118 190 L144 40 M182 190 L156 40" stroke="#39453C" stroke-width="1.5"></path></svg><span class="tile__badge tile__badge--red mono">ТОП 10</span></div>
+                <div class="tile__body"><span class="tile__title">Черни точки</span><span class="tile__text">Участъци с най-много тежки ПТП през последните години.</span></div>
+            </a>
+        </div>
+    </div>
+    </div>
+</section>
+
+<!-- ===== Зимница ===== -->
+<section class="zim">
+    <div class="container zim__inner">
+        <div class="reveal zim__a" id="zim">
+            <p class="mono zim__eyebrow">10.11.2026 · АМ „ТРАКИЯ“ · П.В. ЗИМНИЦА</p>
+            <h2 class="h-display zim__title"><span data-count="86">86</span> превозни средства.<br /><span class="zim__dead" data-count="12">12</span> загинали.</h2>
+        </div>
+        <div class="reveal zim__b">
+            <p>Гъста мъгла, мокър път и скорост, неподходяща за условията. Две верижни катастрофи в двете посоки на магистралата, само на няколко километра една от друга.</p>
+            <p><strong>RoadSense започна с един въпрос: можеше ли някой да предупреди шофьорите двайсет минути по-рано?</strong></p>
+            <a asp-controller="Route" asp-action="Index" class="btn btn--dark btn--lg press">Виж как работи оценката на риска →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Как работи ===== -->
+<section class="container how">
+    <h2 class="h-display h2 reveal">Как работи</h2>
+    <div class="how__grid">
+        @{
+            var steps = new[]
+            {
+                ("01", "Събираме данни", "Прогноза за времето, история на ПТП от МВР и НСИ, сигнали от шофьори."),
+                ("02", "Делим пътя на участъци", "Всеки 5–10 км от пътя получава собствено време и история на катастрофите."),
+                ("03", "Оценяваме риска", "Оценка от 0 до 100 за всеки участък и всеки час — с обяснение защо."),
+                ("04", "Предупреждаваме навреме", "Препоръчителна скорост, по-безопасен час за тръгване и известие, ако условията се влошат.")
+            };
+        }
+        @for (var i = 0; i < steps.Length; i++)
+        {
+            <div class="reveal" style="transition-delay: @(i * 90)ms">
+                <div class="card lift how__card"><span class="mono how__n">@steps[i].Item1</span><span class="how__title">@steps[i].Item2</span><span class="muted">@steps[i].Item3</span></div>
+            </div>
+        }
+    </div>
+    <div class="sources reveal">
+        <span class="small muted"><strong>Източници на данни:</strong></span>
+        @foreach (var src in new[] { "АПИ", "МВР", "НСИ", "НИМХ", "Open-Meteo", "data.egov.bg", "Сигнали от шофьори" })
+        {
+            <span class="source-chip">@src</span>
+        }
+    </div>
+</section>
+
+<!-- ===== Страници ===== -->
+<section class="container pages">
+    @{
+        var pages = new[]
+        {
+            ("02", "Route", "Маршрут от А до Б", "Карта с маршрута и оценка на риска — времето и катастрофите по пътя."),
+            ("03", "Weather", "Времето около мен", "Прогноза за деня в твоя район и препоръчителна скорост според колата и настилката."),
+            ("04", "Stats", "Статистика и черен календар", "Катастрофите по пътя, класация на опасните пътища и календар на тежките ПТП."),
+            ("05", "FirstAid", "Съвети и първа помощ", "Какво да направиш в първите минути след тежко ПТП. Стъпка по стъпка.")
+        };
+    }
+    @for (var i = 0; i < pages.Length; i++)
+    {
+        <div class="reveal" style="transition-delay: @(i * 90)ms">
+            <a asp-controller="@pages[i].Item2" asp-action="Index" class="card lift press page-card">
+                <div class="page-card__top"><span class="h-display page-card__title">@pages[i].Item3</span><span class="mono muted small">@pages[i].Item1</span></div>
+                <div class="page-card__bottom"><span class="muted">@pages[i].Item4</span>
+                    <span class="page-card__arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg></span>
+                </div>
+            </a>
+        </div>
+    }
+</section>
+
+<!-- ===== Абонамент ===== -->
+<section class="subscribe">
+    <div class="container subscribe__inner reveal">
+        <h2 class="h-display">Пътуваш по един и същи маршрут? Ще те предупредим, когато стане опасно.</h2>
+        <form class="subscribe__form" onsubmit="return false">
+            <label for="email" class="visually-hidden">Имейл</label>
+            <input id="email" type="email" placeholder="твоят имейл" autocomplete="email" />
+            <button type="submit" class="btn btn--red press">Абонирай се</button>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/lib/lenis/lenis.min.js"></script>
+    <script src="~/js/home.js" asp-append-version="true"></script>
+}
