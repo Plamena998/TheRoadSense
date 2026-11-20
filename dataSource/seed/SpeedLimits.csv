@@ -1,0 +1,16 @@
+RoadType,Vehicle,LimitKmh
+Motorway,Bus,100
+Motorway,Car,140
+Motorway,Motorcycle,140
+Motorway,Truck,100
+Motorway,Van,140
+OutsideTown,Bus,80
+OutsideTown,Car,90
+OutsideTown,Motorcycle,90
+OutsideTown,Truck,80
+OutsideTown,Van,90
+Town,Bus,50
+Town,Car,50
+Town,Motorcycle,50
+Town,Truck,50
+Town,Van,50

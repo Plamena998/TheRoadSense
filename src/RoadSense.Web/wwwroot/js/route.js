@@ -43,7 +43,7 @@
       const a = byId[s.fromCityId], b = byId[s.toCityId];
       return '<path class="road" data-seg="' + s.id + '" d="M' + a.x + ' ' + a.y + ' L' + b.x + ' ' + b.y + '" stroke="#2F3A32" stroke-width="3"></path>';
     }).join('');
-    const right = new Set(['BGS', 'VAR', 'RUS', 'VTR', 'HAS', 'KUL', 'KAP']);
+    const right = new Set(['BGS', 'VAR', 'RUS', 'VTR', 'HAS']);
     $('labels').innerHTML = network.cities.map((c) =>
       '<text x="' + (right.has(c.id) ? c.x + 12 : c.x - 10) + '" y="' + (c.y - 10) + '" text-anchor="' + (right.has(c.id) ? 'start' : 'end') + '">' + RS.esc(c.name) + '</text>').join('');
   }
@@ -85,6 +85,9 @@
     badge.className = 'lvl lvl--' + r.level; badge.textContent = r.levelLabel + ' риск';
     $('marker').style.transform = 'translateX(' + Math.min(99, r.score) + '%)';
     $('verdict').textContent = r.verdict;
+    $('mlNote').textContent = r.riskSource === 'ml'
+      ? 'Времето в оценката е изчислено от ML модел (ML.NET)' + (r.modelReliable ? '.' : ' — моделът все още не е по-добър от базовата линия, затова разликите между часовете са малки.')
+      : '';
     $('factors').innerHTML = r.factors.map((f) =>
       '<div class="factor"><span>' + RS.esc(f.label) + '</span><span class="track"><span class="bar-h" style="transform:scaleX(' + (f.value / 100).toFixed(3) + ');background:' + RS.level[RS.levelOf(f.value)].color + '"></span></span><span class="mono" style="text-align:right;color:var(--text)">' + f.value + '</span></div>').join('');
 

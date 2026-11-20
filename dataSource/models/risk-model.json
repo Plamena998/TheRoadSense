@@ -1,0 +1,11 @@
+{
+  "TrainedUtc": "2026-11-20T12:11:07.4011541Z",
+  "TrainingRows": 168,
+  "Folds": 5,
+  "RSquared": -0.046,
+  "MeanAbsoluteError": 0.213,
+  "BaselineMeanAbsoluteError": 0.208,
+  "IsReliable": false,
+  "Trainer": "LbfgsPoissonRegression (ML.NET)",
+  "LabelDescription": "Тежки ПТП наблюдавани / очаквани за областта и месеца (1.0 = обичайно)"
+}

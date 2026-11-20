@@ -2,7 +2,7 @@ using RoadSense.Domain;
 
 namespace RoadSense.Infrastructure.Sql;
 
-// EF таблици, изведени от структурата на mock данните (MockData/*.json).
+// EF таблици за данните на приложението (началните стойности са в dataSource/seed/*.csv).
 
 // ===== Пътна мрежа =====
 public class CityEntity
@@ -215,4 +215,13 @@ public class FirstAidKitItemEntity
     public int Id { get; set; }
     public int SortOrder { get; set; }
     public string Text { get; set; } = "";
+}
+
+// ===== Абонати =====
+public class SubscriberEntity
+{
+    public int Id { get; set; }
+    /// <summary>Нормализиран (малки букви), уникален.</summary>
+    public string Email { get; set; } = "";
+    public DateTime SubscribedUtc { get; set; }
 }

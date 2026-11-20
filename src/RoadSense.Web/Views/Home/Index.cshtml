@@ -281,11 +281,12 @@
 <section class="subscribe">
     <div class="container subscribe__inner reveal">
         <h2 class="h-display">Пътуваш по един и същи маршрут? Ще те предупредим, когато стане опасно.</h2>
-        <form class="subscribe__form" onsubmit="return false">
+        <form class="subscribe__form" id="subscribeForm" novalidate>
             <label for="email" class="visually-hidden">Имейл</label>
             <input id="email" type="email" placeholder="твоят имейл" autocomplete="email" />
             <button type="submit" class="btn btn--red press">Абонирай се</button>
         </form>
+        <p id="subscribeMsg" class="subscribe__msg" role="status" aria-live="polite"></p>
     </div>
 </section>
 

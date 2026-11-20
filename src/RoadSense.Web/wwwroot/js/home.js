@@ -2,6 +2,29 @@
 (function () {
   'use strict';
   const RS = window.RS;
+
+  // ---- абонамент по имейл ----
+  const subForm = document.getElementById('subscribeForm');
+  if (subForm) {
+    const input = subForm.querySelector('input'), btn = subForm.querySelector('button'), msg = document.getElementById('subscribeMsg');
+    const say = (text, kind) => { msg.textContent = text; msg.className = 'subscribe__msg' + (kind ? ' is-' + kind : ''); };
+    subForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = input.value.trim();
+      if (!input.checkValidity() || !email) { say('Въведи валиден имейл.', 'error'); return; }
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+        if (res.status === 400) { say('Въведи валиден имейл.', 'error'); return; }
+        if (!res.ok) throw new Error(res.status);
+        const data = await res.json();
+        say(data.status === 'exists' ? 'Този имейл вече е абониран.' : 'Абонирахме те. Благодарим!', 'ok');
+        if (data.status !== 'exists') input.value = '';
+      } catch { say('Нещо се обърка. Опитай пак по-късно.', 'error'); }
+      finally { btn.disabled = false; }
+    });
+  }
+
   const story = document.getElementById('story');
   if (!story) return;
 

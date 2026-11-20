@@ -1,10 +1,10 @@
-# RoadSense — фронтенд с mockup данни
+# RoadSense
 
-ASP.NET Core MVC (.NET 10) приложение с петте страници от concept-art-а. Данните идват от JSON файлове (mockup), а не от базата, така че фронтендът може да се развива и тества веднага. Когато базата е готова, се сменя само източникът на данни — изгледите, CSS, JS и API-то остават същите.
+ASP.NET Core MVC (.NET 10) приложение с петте страници от concept-art-а. Данните идват от SQL Server през EF Core. При стартиране приложението само прилага чакащите миграции и зарежда празните таблици от CSV файловете в `dataSource/seed`.
 
 ## Стартиране
 
-Нужно е .NET 10 SDK (без NuGet пакети). Отваря се с Visual Studio 2026 или `dotnet run`.
+Нужни са .NET 10 SDK и достъпен SQL Server (низът за връзка е в `ConnectionStrings:RoadSense`). Отваря се с Visual Studio 2026 или `dotnet run`.
 
 ```bash
 cd src/RoadSense.Web
@@ -27,11 +27,13 @@ src/
     Services/RouteRiskService.cs    маршрут (Дейкстра) + оценка на риска 0–100 по участъци и часове
     Services/SpeedAdvisor.cs        препоръчителна скорост: физика + множители, настройки от appsettings
     Services/StatsService.cs        статистика по път, класация, черен календар; WeatherService
-  RoadSense.Infrastructure.Mock/
-    MockData/*.json                 ← mockup данните — редактирай тук
-    MockDataStore.cs                чете JSON-а и реализира всички интерфейси
+  RoadSense.Infrastructure.Sql/
+    RoadSenseDbContext.cs, Entities.cs   EF модел и таблици; Migrations/ — EF миграции
+    SqlDataStore.cs                 реализира всички интерфейси за данни върху базата
+    DatabaseInitializer.cs          миграции + зареждане на празните таблици от CSV (по един метод на таблица)
+    CsvData.cs                      четене и износ на CSV през EF метаданните
   RoadSense.Web/
-    Program.cs                      DI: "DataSource": "Mock" → MockDataStore
+    Program.cs                      DI: SqlDataStore, миграции и зареждане при старт
     Controllers/PagesControllers.cs MVC страниците
     Controllers/Api/ApiControllers.cs  JSON API за фронтенда
     Views/Shared/_Layout.cshtml     навигация, шрифтове, общ footer
@@ -51,42 +53,25 @@ src/
 | Маршрут | списък с градовете | `GET /api/network`, `GET /api/route?from=SOF&to=BGS&hour=23&vehicle=Truck` |
 | Времето около мен | местоположение | `GET /api/weather/today`, `GET /api/location/gps?lat=42.69&lon=23.32&accuracy=40`, `GET /api/location/network`, `GET /api/speed?hour=7&vehicle=Car&road=Motorway&surface=auto` |
 | Статистика | пътищата, класацията (таблицата) | `GET /api/stats/road/A1?period=all`, `GET /api/stats/calendar?year=2026&month=11` |
-| Първа помощ | всички стъпки и раздели от `content-firstaid.json` | — |
+| Първа помощ | всички стъпки и раздели от базата | — |
 
 Допълнително: `GET /api/stats/roads`, `GET /api/stats/ranking`, `GET /api/ticker`.
 
-## Mockup данните (`src/RoadSense.Infrastructure.Mock/MockData`)
+## Данни и база
 
-| Файл | Съдържание |
-|---|---|
-| `cities.json` | възлите на пътната мрежа (координати върху схемата 800×440); `selectable` — дали са в падащото меню |
-| `segments.json` | участъците: път, км, излагане на мъгла, история на ПТП, текущ инцидент/ремонт |
-| `speed-limits.json` | ограничения по тип път и превозно средство (таблицата, която ще е в базата) |
-| `weather.json` | местоположение и почасов профил (мъгла, температура, валежи, изгрев/залез) |
-| `places.json` | населени места с координати — най-близкото до потребителя се показва като „район“ |
-| `ip-location.json` | какво връща „местоположението по мрежата“ в mock режим (сменете координатите, за да симулирате друг град) |
-| `stats-roads.json` | пътищата за статистиката: черни точки, области, причини |
-| `stats-weights.json` | разпределение на загиналите по месеци и часове |
-| `ranking.json` | класацията на опасните пътища |
-| `calendar.json` | черният календар — реални събития от 2026 г. с източник |
-| `content-home.json` | лентата на живо и числата в историята на началната страница |
-| `content-firstaid.json` | стъпките, разделите и списъкът за колата |
+Началните данни са CSV файлове в `dataSource/seed` — по един на таблица, с име като таблицата (`Cities.csv`, `RoadSegments.csv`, …). Първият ред е заглавие с имената на колоните, празна стойност е NULL.
 
-Файловете се копират при build и се четат наново, ако се променят (без рестарт при `dotnet watch`).
+При стартиране на `RoadSense.Web`:
+1. ако има неприложени EF миграции, се прилагат (базата се създава, ако липсва);
+2. всяка таблица, която е празна, се зарежда от своя CSV файл. Таблици с данни не се пипат.
 
-## Преминаване към базата
-
-1. Създай `RoadSense.Infrastructure.Sql` (EF Core) с класове, които реализират интерфейсите от `RoadSense.Application/Abstractions.cs`.
-2. В `Program.cs` добави клон за `"DataSource": "Sql"`, който регистрира тези класове вместо `MockDataStore`.
-3. В `appsettings.json` смени `"DataSource": "Sql"`.
+Файловете се копират в `SeedData/` до изпълнимия файл при build. Друга папка се задава с `Database:SeedPath`.
 
 ## Местоположение
 
-Страницата „Времето около мен“ пита браузъра за GPS. Ако потребителят откаже, GPS не отговори до 8 s или браузърът не го поддържа, районът се определя по IP адреса на мрежата (Wi-Fi / мобилни данни, ±5–25 км) чрез `GET /api/location/network`. Ако и това не стане, се показва районът по подразбиране от `weather.json`. Бутонът „Използвай GPS“ опитва отново.
+Страницата „Времето около мен“ пита браузъра за GPS. Ако потребителят откаже, GPS не отговори до 8 s или браузърът не го поддържа, районът се определя по IP адреса на мрежата (Wi-Fi / мобилни данни, ±5–25 км) чрез `GET /api/location/network`. Ако и това не стане, се показва районът по подразбиране (първото място от таблицата `WeatherLocations`). Бутонът „Използвай GPS“ опитва отново.
 
-В `appsettings.json`: `"IpGeolocation": "Mock"` връща отговора от `ip-location.json`; `"IpWhoIs"` ползва реалната услуга ipwho.is (без ключ). На localhost реалната услуга не може да определи място и се показва районът по подразбиране — проверява се на публичен сървър. Зад reverse proxy адресът се взима от `X-Forwarded-For`.
-
-Фронтендът не се променя. Ограниченията на скоростта по тип път вече се четат през `ISpeedLimitRepository` — точно както е договорено за базата.
+Местоположението по IP идва от услугата ipwho.is (без ключ). На localhost реалната услуга не може да определи място и се показва районът по подразбиране — проверява се на публичен сървър. Зад reverse proxy адресът се взима от `X-Forwarded-For`.
 
 ## SpeedAdvisor
 
@@ -94,6 +79,5 @@ src/
 
 ## Бележки
 
-- Данните са демо, освен: числата за първото полугодие на 2026 г. (ДАБДП) и трите събития в черния календар.
 - Шрифтовете (Unbounded, Onest, JetBrains Mono) се зареждат от Google Fonts.
 - Анимациите следват принципите от `emil-design-eng` и се изключват при `prefers-reduced-motion`.

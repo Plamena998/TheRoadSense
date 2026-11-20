@@ -2,9 +2,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RoadSense.Application\RoadSense.Application.csproj" />
-    <ProjectReference Include="..\RoadSense.Infrastructure.Mock\RoadSense.Infrastructure.Mock.csproj" />
     <ProjectReference Include="..\RoadSense.Domain\RoadSense.Domain.csproj" />
     <ProjectReference Include="..\RoadSense.Infrastructure.Sql\RoadSense.Infrastructure.Sql.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="6.0.0" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -12,5 +15,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../dataSource/seed/*.csv" Link="SeedData/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
 </Project>

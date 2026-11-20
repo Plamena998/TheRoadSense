@@ -3,8 +3,7 @@ using RoadSense.Domain;
 namespace RoadSense.Application;
 
 // Интерфейсите, които всеки източник на данни трябва да реализира.
-// Сега ги реализира RoadSense.Infrastructure.Mock (JSON файлове);
-// по-късно ще ги реализира проект с EF Core и SQL база — фронтендът и услугите не се променят.
+// Реализира ги RoadSense.Infrastructure.Sql (EF Core и SQL Server); услугите и фронтендът зависят само от тези интерфейси.
 
 public interface IRoadNetworkRepository
 {
@@ -70,3 +69,10 @@ public sealed record HomeContent(IReadOnlyList<HomeStat> Stats, string StatsSour
 public sealed record FirstAidStep(string Title, string Lead, IReadOnlyList<string> Items);
 public sealed record FirstAidTopic(string Id, string Tag, string Title, IReadOnlyList<string> Items);
 public sealed record FirstAidContent(IReadOnlyList<FirstAidStep> Steps, IReadOnlyList<FirstAidTopic> Topics, IReadOnlyList<string> Kit);
+
+/// <summary>Абонати за предупреждения по имейл.</summary>
+public interface ISubscriberRepository
+{
+    /// <summary>Записва имейла. Връща false, ако вече е абониран (регистърът на буквите не се отчита).</summary>
+    Task<bool> AddAsync(string email, CancellationToken ct = default);
+}
