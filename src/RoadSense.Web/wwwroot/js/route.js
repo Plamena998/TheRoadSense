@@ -43,7 +43,7 @@
       const a = byId[s.fromCityId], b = byId[s.toCityId];
       return '<path class="road" data-seg="' + s.id + '" d="M' + a.x + ' ' + a.y + ' L' + b.x + ' ' + b.y + '" stroke="#2F3A32" stroke-width="3"></path>';
     }).join('');
-    const right = new Set(['BGS', 'VAR', 'RUS', 'VTR', 'HAS', 'KUL', 'KAP']);
+    const right = new Set(['BGS', 'VAR', 'RUS', 'VTR', 'HAS']);
     $('labels').innerHTML = network.cities.map((c) =>
       '<text x="' + (right.has(c.id) ? c.x + 12 : c.x - 10) + '" y="' + (c.y - 10) + '" text-anchor="' + (right.has(c.id) ? 'start' : 'end') + '">' + RS.esc(c.name) + '</text>').join('');
   }
