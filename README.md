@@ -79,5 +79,5 @@ src/
 
 ## Бележки
 
-- Шрифтовете (Unbounded, Onest, JetBrains Mono) се зареждат от Google Fonts.
+- Шрифтовете (Unbounded, Onest, JetBrains Mono) се зареждат от уеб страницата Google Fonts.
 - Анимациите следват принципите от `emil-design-eng` и се изключват при `prefers-reduced-motion`.
